@@ -11,6 +11,8 @@ export interface Field {
   type: DataType;
   ref?: Model | null;
   ref_field?: Field | null;
+  required?: boolean;
+  unique?: boolean;
 }
 export interface Model {
   collection_name: string;

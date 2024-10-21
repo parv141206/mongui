@@ -9,12 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "dracula-prism": "^2.1.16",
+    "highlight.js": "^11.10.0",
+    "js-beautify": "^1.15.1",
     "next": "14.2.15",
+    "prismjs": "^1.29.0",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@types/js-beautify": "^1.14.3",
     "@types/node": "^20",
+    "@types/prismjs": "^1.26.4",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
