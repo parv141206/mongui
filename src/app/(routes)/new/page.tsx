@@ -1,7 +1,10 @@
 "use client";
+import { createAllModels } from "@/lib/createAllModels";
 import { Field, Model } from "@/types/Models";
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from "react";
+import Prism from "prismjs"; // Import Prism
+import "prismjs/themes/prism-tomorrow.css"; // Default Prism theme
+import "dracula-prism/dist/css/dracula-prism.css"; // Import Dracula theme
 export default function New() {
   const [models, setModels] = useState<Model[]>([]);
 
@@ -55,8 +58,13 @@ export default function New() {
     });
   }
 
+  useEffect(() => {
+    // Highlight code when models change
+    Prism.highlightAll();
+  }, [models]);
+
   return (
-    <div>
+    <div className="bg-[#17181f] text-white">
       <button onClick={addModel}>Add Model</button>
       <div className="flex flex-wrap">
         {models.map((model, modelIndex) => (
@@ -146,6 +154,27 @@ export default function New() {
                       </select>
                     </>
                   )}
+                  {/* Checkbox for required and unique */}
+                  <label>Required</label>
+                  <input
+                    type="checkbox"
+                    checked={field.required}
+                    onChange={(e) =>
+                      updateField(modelIndex, fieldIndex, {
+                        required: e.target.checked,
+                      })
+                    }
+                  />
+                  <label>Unique</label>
+                  <input
+                    type="checkbox"
+                    checked={field.unique}
+                    onChange={(e) =>
+                      updateField(modelIndex, fieldIndex, {
+                        unique: e.target.checked,
+                      })
+                    }
+                  />
                 </div>
               ))}
             </div>
@@ -157,7 +186,27 @@ export default function New() {
           </div>
         ))}
       </div>
-      <pre>{JSON.stringify(models, null, 2)}</pre>
+
+      {/* Displaying models in a highlighted code block */}
+      <pre className="language-json">
+        <code>{JSON.stringify(models, null, 2)}</code>
+      </pre>
+
+      {/* Another highlighted code block for createAllModels output */}
+      <div className="m-3 flex w-fit flex-col gap-3 rounded-lg bg-[#282a36] p-5 shadow-md shadow-black">
+        <div className="flex gap-3 p-1">
+          <div className="h-5 w-5 rounded-full bg-red-500"></div>
+          <div className="h-5 w-5 rounded-full bg-yellow-500"></div>
+          <div className="h-5 w-5 rounded-full bg-green-500"></div>
+        </div>
+        <hr />
+        <div className="p-1">
+          {/* Highlighting the output of createAllModels */}
+          <pre className="language-javascript">
+            <code>{createAllModels(models)}</code>
+          </pre>
+        </div>
+      </div>
     </div>
   );
 }
