@@ -4,6 +4,7 @@ import { gsap } from "gsap";
 import { cn } from "@/lib/utils";
 import AnimatedGridPattern from "@/components/ui/animated-grid-pattern";
 import Particles from "@/components/ui/particles";
+import SimpleCard from "@/components/SimpleCard";
 
 export default function Home() {
   useEffect(() => {
@@ -47,7 +48,7 @@ export default function Home() {
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-black p-10 text-white">
       {/* Navbar */}
-      <nav className="flex items-center justify-between p-4">
+      <nav className="relative z-10 flex items-center justify-between p-4">
         <div className="flex items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -82,7 +83,7 @@ export default function Home() {
         </button>
       </nav>
 
-      <div className="mt-8 flex flex-grow flex-col items-center justify-center">
+      <div className="relative z-10 mt-8 flex flex-grow flex-col items-center justify-center">
         <h1 className="title text-6xl font-extrabold text-white drop-shadow-lg">
           Welcome to{" "}
           <span className="text-6xl font-extrabold text-green-600 drop-shadow-lg">
@@ -100,34 +101,22 @@ export default function Home() {
         {/* Features Section */}
         <div className="features mt-10 grid grid-cols-1 gap-6 text-center text-gray-400 opacity-0 sm:grid-cols-2 lg:grid-cols-3">
           {/* Feature Card */}
-          <div className="glass-card transform p-6 transition-transform hover:scale-105">
-            <h2 className="text-xl font-semibold text-white">
-              Easy Query Generation
-            </h2>
-            <p className="mt-2">
-              Create Mongoose queries quickly with minimal effort.
-            </p>
-          </div>
+          <SimpleCard
+            doodle="/assets/CardImg.jpeg" // Local image path
+            title="Easy Query Generation"
+            description="Create Mongoose queries quickly with minimal effort."
+          />
 
           {/* Feature Card */}
-          <div className="glass-card transform p-6 transition-transform hover:scale-105">
-            <h2 className="text-xl font-semibold text-white">
-              Customizable Templates
-            </h2>
-            <p className="mt-2">
-              Tailor your queries to fit your project needs.
-            </p>
-          </div>
+          <SimpleCard
+            title="Customizable Templates"
+            description="Tailor your queries to fit your project needs."
+          />
 
-          {/* Feature Card */}
-          <div className="glass-card transform p-6 transition-transform hover:scale-105">
-            <h2 className="text-xl font-semibold text-white">
-              Real-time Syntax Checking
-            </h2>
-            <p className="mt-2">
-              Ensure your queries are correct before running them.
-            </p>
-          </div>
+          <SimpleCard
+            title="Real-time Syntax Checking"
+            description="Ensure your queries are correct before running them."
+          />
         </div>
       </div>
 

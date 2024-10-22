@@ -3,34 +3,56 @@
 @tailwind utilities;
 
 input {
-  background: #282a36;
-  color: #f8f8f2;
-  padding: 5px;
-  border-radius: 5px;
+  @apply rounded-xl border border-white/25 bg-black p-3;
 }
-.glass-card {
-  background: rgba(255, 255, 255, 0); /* Translucent background */
-  backdrop-filter: blur(10px); /* Frosted glass effect */
-  border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
-  border-radius: 15px; /* Rounded corners */
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* Light shadow */
-  transition:
-    transform 0.3s ease-in-out,
-    background 0.3s ease-in-out;
+select {
+  @apply rounded-xl border border-white/25 bg-black p-3;
 }
 
-.glass-card:hover {
-  background: rgba(255, 255, 255, 0.2); /* Slightly brighter on hover */
-  border: 1px solid rgba(255, 255, 255, 0.3); /* Stronger border */
-  transform: translateY(-5px); /* Lift effect on hover */
+.custom-checkbox {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
 
-h2 {
-  color: #00e1ff; /* Bright accent color */
+.custom-checkbox input {
+  display: none; /* Hide the default checkbox */
 }
 
-p {
-  color: #b3b3ff; /* Subtle accent color */
+.checkmark {
+  width: 20px; /* Width of the custom checkbox */
+  height: 20px; /* Height of the custom checkbox */
+  background-color: black; /* Background color */
+  border-radius: 5px; /* Rounded corners */
+  padding: 0.75rem; /* Equivalent to p-3 for padding */
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.227);
+  margin-left: 8px; /* Space between label and checkbox */
+}
+
+.custom-checkbox input:checked + .checkmark {
+  background-color: #4caf50; /* Change background when checked */
+}
+
+.checkmark::after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.custom-checkbox input:checked + .checkmark::after {
+  display: block;
+}
+
+.checkmark::after {
+  left: 35%; /* Position of the checkmark */
+  top: 25%; /* Position of the checkmark */
+  transform: translate(-50%, -50%);
+  width: 5px; /* Width of the checkmark */
+  height: 10px; /* Height of the checkmark */
+  border: solid white; /* Checkmark color */
+  border-width: 0 2px 2px 0; /* Checkmark shape */
+  transform: rotate(45deg); /* Rotate to form a checkmark */
 }
 
 @layer base {
