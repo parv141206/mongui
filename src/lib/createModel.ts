@@ -34,7 +34,7 @@ export function createModel(model: Model) {
         ${field.type === "ref" ? `ref: '${field.ref?.collection_name},'` : ""}
     }`;
     })
-    .join(",\n    "); // Join fields with a comma and newline for better formatting
+    .join(",\n    ");
 
   const Model = `
 import mongoose from 'mongoose';
