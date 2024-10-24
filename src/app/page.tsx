@@ -25,6 +25,12 @@ export default function Home() {
     );
 
     gsap.fromTo(
+      ".safari",
+      { y: 50, opacity: 0 },
+      { duration: 1, y: 0, opacity: 1, delay: 1 },
+    );
+
+    gsap.fromTo(
       ".description",
       { y: 50 },
       { duration: 1, y: 0, opacity: 1, delay: 1.5 },
