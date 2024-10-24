@@ -12,7 +12,7 @@ import Prism from "prismjs";
 import "prismjs/themes/prism-tomorrow.css";
 import "dracula-prism/dist/css/dracula-prism.css";
 import Link from "next/link";
-import { ScrollTrigger } from "gsap/scrollTrigger";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
