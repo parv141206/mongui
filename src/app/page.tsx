@@ -9,9 +9,13 @@ import Safari from "@/components/ui/safari";
 import CodeView from "@/components/CodeView";
 import SimpleCodeView from "@/components/SimpleCodeView";
 import Prism from "prismjs";
-
 import "prismjs/themes/prism-tomorrow.css";
 import "dracula-prism/dist/css/dracula-prism.css";
+import Link from "next/link";
+import { ScrollTrigger } from "gsap/scrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
 export default function Home() {
   useEffect(() => {
     gsap.fromTo(
@@ -25,11 +29,6 @@ export default function Home() {
       { y: 50 },
       { duration: 1, y: 0, opacity: 1, delay: 1.5 },
     );
-    gsap.fromTo(
-      ".safari",
-      { y: 50 },
-      { duration: 1, y: 0, opacity: 1, delay: 1.5 },
-    );
 
     gsap.to(".button", {
       duration: 2,
@@ -37,39 +36,69 @@ export default function Home() {
       opacity: 1,
       delay: 1.5,
     });
+    gsap.to(".stext", {
+      x: -330,
+      y: 280,
+      scale: 1,
+      duration: 2,
+      opacity: 1,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".stext",
+        start: "0% 0%",
+        pin: true,
+        pinSpacing: false,
+        scrub: 1,
+        end: "100% 100%",
+      },
+    });
+    gsap.to(".safari", {
+      x: () => window.innerWidth * 0.2,
+      y: () => window.innerHeight * 0.1,
+      scale: "0.5",
+      opacity: 1,
+      duration: 4,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".safari",
+        start: "top top",
+        pin: true, // Pin the element
+        pinSpacing: false, // No extra space created while pinning
+        scrub: 1, // Smooth scroll-based animation
+        end: "100% 150%", // End pinning after 150% of the viewport height
+      },
+    });
+    gsap.to(".showcase", {
+      x: () => window.innerWidth * 0.01,
+      duration: 1,
+      opacity: 1,
+      delay: 2,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".showcase",
+        start: "top 60%",
+        scrub: true,
+        end: "bottom 100%",
+      },
+    });
+    gsap.to(".ctext", {
+      opacity: 1,
+      x: 0,
+      duration: 1,
+      ease: "power2.out",
+      delay: 4,
+      scrollTrigger: {
+        trigger: ".ctext",
+        start: "top 60%",
+        scrub: true,
+        end: "bottom 100%",
+      },
+    });
   }, []);
 
   return (
     <div className="relative overflow-hidden bg-black text-white">
       <div className="relative z-10 flex flex-col gap-10 p-10">
-        {/* MAIN ICON <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="25"
-              height="25"
-              viewBox="0 0 100 100"
-              fill="none"
-              stroke="white"
-              strokeWidth="6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M10 80 L50 20 L90 80" />
-              <path d="M30 80 L50 50 L70 80" />
-            </svg> */}
-        {/* PROFILE ICON<svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-6 w-6"
-            >
-              <circle cx="12" cy="8" r="4" />
-              <path d="M16 20c0-2-4-3-4-3s-4 1-4 3" />
-            </svg> */}
-
         <div className="mt-8 flex min-h-[50vh] flex-grow flex-col items-center justify-center">
           <h1 className="title text-center text-7xl font-extrabold text-stone-300 opacity-0 drop-shadow-lg">
             Welcome to{" "}
@@ -81,26 +110,140 @@ export default function Home() {
             Generate Mongoose queries effortlessly with{" "}
             <span className="text-white">MongUi</span>.
           </p>
-          <button className="button mt-6 translate-y-10 rounded-xl bg-stone-300 px-6 py-2 text-black opacity-0 transition hover:bg-gray-200">
-            Get Started
-          </button>
+          <Link href={"/new"}>
+            <button className="button mt-6 translate-y-3 rounded-xl bg-stone-300 px-6 py-2 text-black opacity-0 transition hover:bg-gray-200">
+              Get Started
+            </button>
+          </Link>
         </div>
-        <section className="relative flex h-[400vh] w-full justify-center gap-3">
+        <div className="block bg-red-500 p-3 text-xl md:hidden">
+          This website is in development and currently doesnt support proper
+          mobile view. Kindly view on desktop!
+        </div>
+        <section className="relative hidden h-[100vh] w-full flex-row justify-center md:my-4 md:flex">
           <div
             style={{
               filter: "drop-shadow(0 0 40px rgba(74, 222, 128, 0.2))",
             }}
-            className="safari dark absolute top-0 my-5 flex h-fit items-center justify-center opacity-0"
+            className="safari px-5flex dark absolute top-0 my-5 h-fit items-end justify-center"
           >
             <Safari />
           </div>
+          <div className="stext absolute flex w-1/2 translate-x-[-900px] flex-col items-start justify-center text-white opacity-0">
+            <div className="huge-code-text text-white/15">SKETCH</div>
+            <h1 className="text-3xl text-white">
+              Tired of writing Mongoose...
+            </h1>
+            <div className="border-s-4 border-s-white/15 p-3 text-xl">
+              We give you easy to edit models!
+              <span>
+                {" "}
+                <br />
+                This shows what
+              </span>
+              <span className="text-green-400"> MongUi </span> does with{" "}
+              <span className="text-green-400">
+                just the click of a button!
+              </span>
+            </div>
+          </div>
         </section>
+        <div className="hidden w-full items-center justify-center gap-3 md:flex">
+          <div className="container flex flex-col justify-between gap-5 md:flex-row">
+            <div className="showcase flex translate-x-[-900px] justify-start opacity-0 md:w-1/2">
+              <CodeShowcase />
+            </div>
+            <div className="ctext flex translate-x-[900px] flex-col items-end justify-center text-end opacity-0 md:w-1/2">
+              <div className="huge-code-text text-white/15">CODE</div>
+              <h1 className="text-3xl text-white">Once designing is done...</h1>
+              <div className="border-e-4 border-e-white/15 p-3 text-xl">
+                We provide you the code for all models! This code is in{" "}
+                <span className="text-green-400">CommonJS</span> . You can
+                directly just copy and paste this in your backend,{" "}
+                <span className="text-green-400">
+                  {" "}
+                  without worrying about imports, exports, naming conventions,
+                  etc.{" "}
+                </span>
+              </div>
+              <div className="text-3xl">Its simply ready to go!</div>
+            </div>
+          </div>
+        </div>
+        <section className="hidden w-full flex-col items-center justify-center md:flex">
+          <div className="flex items-center justify-center gap-5">
+            <div className="flex-col items-center justify-center">
+              <div className="text-center text-3xl">And guess what?</div>
+              <div className="text-center text-5xl text-green-400">
+                Its completely free!
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center justify-center gap-5">
+            <iframe
+              src="https://giphy.com/embed/b8RfbQFaOs1rO10ren"
+              width="480"
+              height="398"
+              frameBorder="0"
+              className="w-1/2"
+              allowFullScreen
+            ></iframe>
+            <iframe
+              src="https://giphy.com/embed/5VKbvrjxpVJCM"
+              width="480"
+              height="384"
+              frameBorder="0"
+              className="w-1/2"
+              allowFullScreen
+            ></iframe>
+            <iframe
+              src="https://giphy.com/embed/EClkor8zYeOvs9StMN"
+              width="480"
+              height="269"
+              frameBorder="0"
+              className="w-1/2"
+              allowFullScreen
+            ></iframe>
+          </div>
+        </section>
+        <section className="relative hidden min-h-[50vh] w-full flex-col items-center justify-center md:flex">
+          <div className="huge-code-text absolute top-0 z-0 text-white/15">
+            LETS GO
+          </div>
+          <div className="relative z-10 text-5xl text-white">
+            So what are you waiting for?
+          </div>
+          <div className="flex gap-3">
+            <Link href={"/new"}>
+              <button className="z-10 mt-6 translate-y-10 rounded-xl bg-stone-300 px-6 py-2 text-black transition hover:bg-gray-200">
+                Get Started
+              </button>
+            </Link>
 
-        <section>
-          <CodeShowcase />
+            <Link href={"/about"}>
+              <button className="z-10 mt-6 translate-y-10 rounded-xl px-6 py-2 text-stone-300 transition">
+                About the Devs
+              </button>
+            </Link>
+          </div>
         </section>
-        <footer className="mt-10 text-xs font-light text-gray-500">
-          &copy; {new Date().getFullYear()} MongUi. All rights reserved.
+        <footer className="mt-10 flex justify-between text-xs font-light text-gray-500">
+          <div>
+            &copy; {new Date().getFullYear()} MongUi. All rights reserved.
+          </div>
+          <div>
+            Made with 🤍 by{" "}
+            <Link
+              href={"https://github.com/parv141206"}
+              className="text-blue-300"
+            >
+              @parv141206
+            </Link>{" "}
+            and{" "}
+            <Link href={"https://github.com/rudyrog"} className="text-blue-300">
+              @rudyrog
+            </Link>
+          </div>
         </footer>
       </div>
       <div className="absolute inset-0 z-0 h-screen">

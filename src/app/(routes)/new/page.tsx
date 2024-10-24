@@ -14,6 +14,8 @@ import DefaultView from "@/components/DefaultView";
 import CodeView from "@/components/CodeView";
 import { DraggableEvent, DraggableData } from "react-draggable";
 import { useModal } from "@/hooks/useModal";
+import { IoMdHome } from "react-icons/io";
+import Link from "next/link";
 
 export default function New() {
   const [models, setModels] = useState<Model[]>([]);
@@ -132,14 +134,24 @@ export default function New() {
       <div className="absolute z-10 flex w-full items-center justify-center">
         <div className="m-5 flex flex-col justify-between rounded-xl border border-white/15 bg-black/15 p-3 backdrop-blur-lg md:w-[80%]">
           <div className="flex justify-between">
-            <button
-              onClick={addModel}
-              className="flex items-center justify-center gap-3"
-            >
-              <IoIosAdd className="text-2xl font-bold" />
-              Add Model
-            </button>
+            <div className="flex items-center justify-center gap-1">
+              <Link href={"/"} className="flex text-xl">
+                <IoMdHome />
+              </Link>
+              <Link href={"/about"} className="mx-3 flex text-xl">
+                About
+              </Link>
+            </div>
             <div className="flex gap-3">
+              <div className="flex items-center justify-start gap-1">
+                <button
+                  onClick={addModel}
+                  className="flex items-center justify-center gap-1"
+                >
+                  <IoIosAdd className="text-2xl font-bold" />
+                  Add Model
+                </button>
+              </div>
               <button
                 onClick={() => {
                   setTranslateX(0);

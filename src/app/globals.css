@@ -24,11 +24,18 @@ select {
   font-family: "Peach";
   src: url("/assets/peach-sundress.ttf");
 }
+iframe {
+  pointer-events: none; /* Disable all mouse events */
+}
 body {
   font-family: "Aptos";
 }
 .futura {
   font-family: "Futura", sans-serif;
+}
+.huge-code-text {
+  font-family: "Eddie";
+  font-size: 8rem;
 }
 .huge-text {
   font-family: "Peach";

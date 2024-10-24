@@ -14,9 +14,6 @@ export default function CodeView({}: {}) {
 
   return (
     <div>
-      <div className="flex justify-between">
-        <h1 className="text-3xl text-white">Get the auto-generated code</h1>
-      </div>
       <CreateAllModelsOutput />
     </div>
   );
