@@ -8,7 +8,32 @@ input {
 select {
   @apply rounded-xl border border-white/25 bg-black p-3;
 }
-
+@font-face {
+  font-family: "Aptos";
+  src: url("/assets/Aptos.ttf");
+}
+@font-face {
+  font-family: "Futura";
+  src: url("/assets/Futura.ttf");
+}
+@font-face {
+  font-family: "Eddie";
+  src: url("/assets/eddie.ttf");
+}
+@font-face {
+  font-family: "Peach";
+  src: url("/assets/peach-sundress.ttf");
+}
+body {
+  font-family: "Aptos";
+}
+.futura {
+  font-family: "Futura", sans-serif;
+}
+.huge-text {
+  font-family: "Peach";
+  font-size: 10rem;
+}
 .custom-checkbox {
   display: flex;
   align-items: center;
@@ -118,6 +143,9 @@ select {
   body {
     @apply bg-background text-foreground;
   }
+  .button {
+    will-change: transform, opacity;
+  }
 }
 body,
 html {
@@ -126,7 +154,7 @@ html {
 }
 /* width */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 7px;
 }
 
 /* Track */
@@ -136,12 +164,11 @@ html {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: lightgreen;
-
-  border-radius: 10px;
+  background: darkgray;
+  border-radius: 2px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: greenyellow;
+  background: gray;
 }

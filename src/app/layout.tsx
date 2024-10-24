@@ -1,4 +1,5 @@
 "use client";
+import { ModalProvider } from "@/hooks/useModal";
 import "./globals.css";
 import { ConfirmProvider } from "@/hooks/useConfirm";
 
@@ -10,7 +11,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="bg-black">
       <ConfirmProvider>
-        <body className={``}>{children}</body>
+        <ModalProvider>
+          <body className={``}>{children}</body>
+        </ModalProvider>
       </ConfirmProvider>
     </html>
   );

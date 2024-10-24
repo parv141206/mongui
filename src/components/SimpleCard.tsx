@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 export default function SimpleCard({
   title,
@@ -7,27 +8,28 @@ export default function SimpleCard({
 }: {
   title: string;
   description: string;
-  doodle?: string | JSX.Element; // Allow string or JSX Element
+  doodle?: string | JSX.Element;
 }) {
   return (
     <div className="flex flex-col items-center rounded-xl border border-white/50 p-6 backdrop-blur-lg transition-transform hover:scale-105 md:flex-row">
-      {/* Doodle/Image Section */}
       {doodle && (
-        <div className="mb-4 flex h-32 w-32 flex-shrink-0 items-center justify-center md:mb-0 md:mr-6">
+        <div className="relative mb-4 h-32 w-32 flex-shrink-0 md:mb-0 md:mr-6">
           {typeof doodle === "string" ? (
-            <img
+            <Image
               src={doodle}
               alt={title}
-              className="h-full w-full object-contain"
+              width={128}
+              height={128}
+              className="object-contain"
+              priority
             />
           ) : (
-            doodle // Render the SVG directly if it's a JSX Element
+            doodle
           )}
         </div>
       )}
 
-      {/* Text Section */}
-      <div className="flex-grow">
+      <div className="flex-grow text-center md:text-left">
         <h2 className="text-xl font-semibold text-white">{title}</h2>
         <p className="mt-2 text-gray-300">{description}</p>
       </div>

@@ -1,5 +1,5 @@
 "use client";
-import { createAllModels } from "@/lib/createAllModels";
+
 import { Field, Model } from "@/types/Models";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Prism from "prismjs";
@@ -7,20 +7,25 @@ import "prismjs/themes/prism-tomorrow.css";
 import "dracula-prism/dist/css/dracula-prism.css";
 import Draggable from "react-draggable";
 import DotPattern from "@/components/ui/dot-pattern";
-import { cn } from "@/lib/utils";
 import { IoTrashBin } from "react-icons/io5";
 import { IoIosAdd } from "react-icons/io";
 import { useConfirm } from "@/hooks/useConfirm";
 import DefaultView from "@/components/DefaultView";
-import Image from "next/image";
+import CodeView from "@/components/CodeView";
+import { DraggableEvent, DraggableData } from "react-draggable";
+import { useModal } from "@/hooks/useModal";
+
 export default function New() {
   const [models, setModels] = useState<Model[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const ref = useRef<HTMLDivElement | null>(null);
   const modelRef = useRef<HTMLDivElement | null>(null);
   const [scale, setScale] = useState(1);
   const [translateX, setTranslateX] = useState(0);
   const [translateY, setTranslateY] = useState(0);
-
+  const [isCodeViewOpen, setIsCodeViewOpen] = useState(false);
+  const [inverseScale, setInverseScale] = useState(1);
+  // ZOOOOOOM
   const handleWheel = (event: WheelEvent) => {
     if (event.ctrlKey) {
       event.preventDefault();
@@ -29,9 +34,11 @@ export default function New() {
       const newScale = event.deltaY > 0 ? scale - 0.1 : scale + 0.1;
 
       setScale(Math.max(0.1, newScale));
+      setInverseScale(1 / newScale);
     }
   };
 
+  // PANEEEEE
   const handleDrag = (event: MouseEvent) => {
     if (event.altKey) {
       event.preventDefault();
@@ -46,7 +53,6 @@ export default function New() {
     const element = ref.current;
     if (element) {
       element.addEventListener("wheel", handleWheel, { passive: false });
-
       element.addEventListener("mousemove", handleDrag);
     }
 
@@ -68,12 +74,48 @@ export default function New() {
     Prism.highlightAll();
   }, [models]);
 
+  const validateCollectionNames = () => {
+    const collectionNames = new Set<string>();
+    const duplicates = new Set<string>();
+
+    const emptyCollections = models.some(
+      (model) => !model.collection_name.trim(),
+    );
+    if (emptyCollections) {
+      setError("All collections must have names");
+      return false;
+    }
+
+    models.forEach((model) => {
+      const name = model.collection_name.trim();
+      if (collectionNames.has(name)) {
+        duplicates.add(name);
+      }
+      collectionNames.add(name);
+    });
+
+    if (duplicates.size > 0) {
+      setError(
+        `Duplicate collection names found: ${Array.from(duplicates).join(", ")}`,
+      );
+      return false;
+    }
+
+    setError(null);
+    return true;
+  };
+
+  const handleCodeViewOpen = () => {
+    if (validateCollectionNames()) {
+      setIsCodeViewOpen(true);
+    }
+  };
+  const confirm = useConfirm();
+  const modal = useModal();
   return (
     <div
       ref={ref}
-      style={{ fontFamily: "cursive" }}
       className="relative h-screen overflow-x-hidden overflow-y-hidden bg-[#17181f-temp] bg-black text-white"
-      // style={{ transform: `translate(${translateX}px, ${translateY}px)` }}
     >
       <div className="absolute inset-0 z-0">
         <DotPattern
@@ -82,61 +124,114 @@ export default function New() {
           duration={3}
           repeatDelay={1}
           className="opacity-25"
-          // className={cn(
-          //   "[mask-image:radial-gradient(700px_circle_at_center,green,transparent)]",
-          //   "inset-x-0 inset-y-[-50%] h-[200%]",
-          // )}
         />
       </div>
+      {isCodeViewOpen && (
+        <CodeView setIsCodeViewOpen={setIsCodeViewOpen} models={models} />
+      )}
       <div className="absolute z-10 flex w-full items-center justify-center">
-        <div className="m-5 flex justify-between rounded-xl border border-white/15 bg-white/5 p-3 backdrop-blur-lg md:w-[80%]">
-          <button
-            onClick={addModel}
-            className="flex items-center justify-center gap-3"
-          >
-            <IoIosAdd className="text-2xl font-bold" />
-            Add Model
-          </button>
-          <div className="flex gap-3">
+        <div className="m-5 flex flex-col justify-between rounded-xl border border-white/15 bg-black/15 p-3 backdrop-blur-lg md:w-[80%]">
+          <div className="flex justify-between">
             <button
-              onClick={() => {
-                setTranslateX(0);
-                setTranslateY(0);
-              }}
+              onClick={addModel}
+              className="flex items-center justify-center gap-3"
             >
-              Route to center
+              <IoIosAdd className="text-2xl font-bold" />
+              Add Model
             </button>
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setTranslateX(0);
+                  setTranslateY(0);
+                }}
+                className="rounded-lg bg-white px-3 py-1 text-black"
+              >
+                Center Layout
+              </button>
+              <button
+                onClick={async () => {
+                  if (await confirm("Are you sure?")) {
+                    setModels([]);
+                  }
+                }}
+                className="rounded-lg bg-red-700 px-3 py-1 font-bold"
+              >
+                Clear all
+              </button>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  modal(`
+                   <div className="container flex flex-col gap-3 text-center md:w-[60%]">
+                    <div className="text-white/75">Click Add Model to get started.</div>
+                      <hr className="border-white/15" />
+                    <div>
+                    <div>Navigation:</div>
+                      <ul className="p-3 text-white/75">
+                        <li>Hold 'Alt' key and move mouse to pane around.</li>
+                        <li>'Ctrl' + Scroll to zoom.</li>
+                        <li>Simply drag a model to move it.</li>
+                      </ul>
+                    </div>
+                      <div className="text-green-400">
+                        Note: In order to reference a field in another model, use the 'ref' data
+                        type and mention the model name. This can be used to populate the field!
+                      </div>
+                    </div>
+                    `);
+                }}
+              >
+                Help!
+              </button>
+              <button
+                onClick={handleCodeViewOpen}
+                className="rounded-lg bg-green-700 px-3 py-1 font-bold"
+              >
+                Code
+              </button>
+            </div>
           </div>
-          <button className="rounded-lg bg-green-700 px-3 py-1 font-bold">
-            Code
-          </button>
+          {error && (
+            <div className="mt-2 text-center text-red-500">{error}</div>
+          )}
         </div>
       </div>
       {models.length === 0 && (
-        <div
-          style={{ fontFamily: "cursive" }}
-          className="relative flex h-full w-full items-center justify-center gap-5 text-xl"
-        >
-          <Image
+        <div className="relative flex h-full w-full items-center justify-center gap-5 text-xl">
+          {/* <Image
             src={"/assets/arrow.svg"}
             width={100}
             height={100}
-            alt=""
+            alt="" 
             className="left-0 top-0 rotate-[270deg] scale-[5] opacity-50"
-          />
+          /> */}
           <DefaultView />
         </div>
       )}
-      <ModelList
-        modelRef={modelRef}
-        translateX={translateX}
-        translateY={translateY}
-        scale={scale}
-        models={models}
-        setModels={setModels}
-      />
+      <div style={{ transform: `scale(${scale})` }}>
+        <ModelList
+          modelRef={modelRef}
+          translateX={translateX}
+          translateY={translateY}
+          scale={scale}
+          models={models}
+          setModels={setModels}
+          inverseScale={inverseScale}
+        />
+      </div>
     </div>
   );
+}
+
+interface Position {
+  x: number;
+  y: number;
+}
+
+interface ModelPositions {
+  [key: number]: Position;
 }
 
 function ModelList({
@@ -146,6 +241,7 @@ function ModelList({
   translateX,
   translateY,
   modelRef,
+  inverseScale,
 }: {
   scale: number;
   models: Model[];
@@ -153,7 +249,9 @@ function ModelList({
   translateX: number;
   translateY: number;
   modelRef: React.MutableRefObject<HTMLDivElement | null>;
+  inverseScale: number;
 }) {
+  const [modelPositions, setModelPositions] = useState<ModelPositions>({});
   const [connections, setConnections] = useState<
     Array<{
       start: {
@@ -164,6 +262,82 @@ function ModelList({
       end: { x: number; y: number; side: "top" | "right" | "bottom" | "left" };
     }>
   >([]);
+
+  const calculateInitialPosition = (index: number) => {
+    const GRID_SPACING = 350;
+    const MODELS_PER_ROW = 3;
+
+    const row = Math.floor(index / MODELS_PER_ROW);
+    const col = index % MODELS_PER_ROW;
+
+    return {
+      x: col * GRID_SPACING + 50,
+      y: row * GRID_SPACING + 50,
+    };
+  };
+
+  useEffect(() => {
+    models.forEach((_, index) => {
+      if (!modelPositions[index]) {
+        setModelPositions((prev) => ({
+          ...prev,
+          [index]: calculateInitialPosition(index),
+        }));
+      }
+    });
+  }, [models.length]);
+
+  const isColliding = (
+    rect1: DOMRect,
+    rect2: DOMRect,
+    padding: number = 10,
+  ): boolean => {
+    return !(
+      rect1.right + padding < rect2.left ||
+      rect1.left > rect2.right + padding ||
+      rect1.bottom + padding < rect2.top ||
+      rect1.top > rect2.bottom + padding
+    );
+  };
+
+  const handleDrag = (
+    modelIndex: number,
+    e: DraggableEvent,
+    data: DraggableData,
+  ) => {
+    const draggedElement = document.getElementById(`model-${modelIndex}`);
+    if (!draggedElement) return;
+
+    const tempRect = draggedElement.getBoundingClientRect();
+    const tempRectAtNewPosition = new DOMRect(
+      tempRect.x + (data.x - (modelPositions[modelIndex]?.x || 0)),
+      tempRect.y + (data.y - (modelPositions[modelIndex]?.y || 0)),
+      tempRect.width,
+      tempRect.height,
+    );
+
+    let canMove = true;
+
+    models.forEach((_, index) => {
+      if (index !== modelIndex) {
+        const otherElement = document.getElementById(`model-${index}`);
+        if (otherElement) {
+          const otherRect = otherElement.getBoundingClientRect();
+          if (isColliding(tempRectAtNewPosition, otherRect)) {
+            canMove = false;
+          }
+        }
+      }
+    });
+
+    if (canMove) {
+      setModelPositions((prev) => ({
+        ...prev,
+        [modelIndex]: { x: data.x, y: data.y },
+      }));
+      updateConnections();
+    }
+  };
 
   const getConnectionPoints = (fromEl: Element, toEl: Element) => {
     const fromRect = fromEl.getBoundingClientRect();
@@ -206,7 +380,6 @@ function ModelList({
       startY = fromCenter.y;
     }
 
-    // To point
     if (angle > -PI * 0.25 && angle <= PI * 0.25) {
       toSide = "left";
       endX = toRect.left;
@@ -307,7 +480,7 @@ function ModelList({
     <>
       <svg
         className="pointer-events-none fixed inset-0"
-        style={{ zIndex: 5 }}
+        style={{ zIndex: 5, scale: inverseScale }}
         width="100%"
         height="100%"
       >
@@ -348,7 +521,10 @@ function ModelList({
         {models.map((model, modelIndex) => (
           <Draggable
             key={modelIndex}
-            onDrag={updateConnections}
+            position={
+              modelPositions[modelIndex] || calculateInitialPosition(modelIndex)
+            }
+            onDrag={(e, data) => handleDrag(modelIndex, e, data)}
             onStop={updateConnections}
           >
             <div className="handle absolute">
@@ -356,7 +532,9 @@ function ModelList({
                 ref={modelRef}
                 id={`model-${modelIndex}`}
                 style={{
-                  transform: `scale(${scale}) translate(${translateX}px, ${translateY}px)`,
+                  transform: `
+
+                   translate(${translateX}px, ${translateY}px)`,
                 }}
               >
                 <ModelCard
@@ -373,6 +551,7 @@ function ModelList({
     </>
   );
 }
+
 function ModelCard({
   model,
   modelIndex,
@@ -499,28 +678,38 @@ function FieldCard({
   }
 
   return (
-    <div className="flex gap-3 p-3">
-      <input
-        type="text"
-        value={field.name}
-        placeholder="Field Name"
-        onChange={(e) => updateField({ name: e.target.value })}
-      />
-      <select
-        value={field.type}
-        onChange={(e) => updateField({ type: e.target.value as Field["type"] })}
-      >
-        {["string", "number", "boolean", "object", "array", "date", "ref"].map(
-          (type) => (
+    <div className="flex flex-col gap-3 border-s border-green-400 p-3">
+      <div className="flex gap-3">
+        <input
+          type="text"
+          value={field.name}
+          placeholder="Field Name"
+          onChange={(e) => updateField({ name: e.target.value })}
+        />
+        <select
+          value={field.type}
+          onChange={(e) =>
+            updateField({ type: e.target.value as Field["type"] })
+          }
+        >
+          {[
+            "string",
+            "number",
+            "boolean",
+            "object",
+            "array",
+            "date",
+            "ref",
+          ].map((type) => (
             <option key={type} value={type}>
               {type}
             </option>
-          ),
-        )}
-      </select>
-
+          ))}
+        </select>
+      </div>
       {field.type === "ref" && (
-        <>
+        <div className="flex items-center gap-3 px-3">
+          <div>Reference: </div>
           <ReferenceSelector
             field={field}
             modelIndex={modelIndex}
@@ -528,37 +717,38 @@ function FieldCard({
             models={models}
             updateField={updateField}
           />
-        </>
+        </div>
       )}
+      <div className="flex gap-3 p-3">
+        <Checkbox
+          label="Required"
+          checked={field.required}
+          onChange={(checked) => updateField({ required: checked })}
+        />
 
-      <Checkbox
-        label="Required"
-        checked={field.required}
-        onChange={(checked) => updateField({ required: checked })}
-      />
-
-      <Checkbox
-        label="Unique"
-        checked={field.unique}
-        onChange={(checked) => updateField({ unique: checked })}
-      />
-      <button
-        className="mx-3 text-3xl"
-        onClick={() =>
-          setModels((prevModels) =>
-            prevModels.map((model, i) =>
-              i === modelIndex
-                ? {
-                    ...model,
-                    fields: model.fields.filter((_, fi) => fi !== fieldIndex),
-                  }
-                : model,
-            ),
-          )
-        }
-      >
-        <IoTrashBin />
-      </button>
+        <Checkbox
+          label="Unique"
+          checked={field.unique}
+          onChange={(checked) => updateField({ unique: checked })}
+        />
+        <button
+          className="mx-3 text-3xl"
+          onClick={() =>
+            setModels((prevModels) =>
+              prevModels.map((model, i) =>
+                i === modelIndex
+                  ? {
+                      ...model,
+                      fields: model.fields.filter((_, fi) => fi !== fieldIndex),
+                    }
+                  : model,
+              ),
+            )
+          }
+        >
+          <IoTrashBin />
+        </button>
+      </div>
     </div>
   );
 }
@@ -597,7 +787,7 @@ function ReferenceSelector({
         ))}
       </select>
 
-      <select
+      {/* <select
         value={field.ref_field?.name || ""}
         onChange={(e) => {
           const selectedField = field.ref?.fields.find(
@@ -614,7 +804,7 @@ function ReferenceSelector({
             {refField.name}
           </option>
         ))}
-      </select>
+      </select> */}
     </>
   );
 }
@@ -641,40 +831,5 @@ function Checkbox({
         <span className="checkmark"></span>
       </label>
     </>
-  );
-}
-
-function CodeDisplay({ models }: { models: Model[] }) {
-  return (
-    <pre className="language-json">
-      <code>{JSON.stringify(models, null, 2)}</code>
-    </pre>
-  );
-}
-
-function CreateAllModelsOutput({ models }: { models: Model[] }) {
-  return (
-    <div className="m-3 flex w-fit flex-col gap-3 rounded-lg bg-[#282a36] p-5 shadow-md shadow-black">
-      <StatusIndicators />
-
-      <hr />
-
-      <pre className="language-javascript">
-        <code>{createAllModels(models)}</code>
-      </pre>
-    </div>
-  );
-}
-
-function StatusIndicators() {
-  return (
-    <div className="flex gap-3 p-1">
-      {["red", "yellow", "green"].map((color) => (
-        <div
-          key={color}
-          className={`h-5 w-5 rounded-full bg-${color}-500`}
-        ></div>
-      ))}
-    </div>
   );
 }
