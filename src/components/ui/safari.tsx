@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { SVGProps } from "react";
 
 export interface SafariProps extends SVGProps<SVGSVGElement> {
@@ -11,26 +10,21 @@ export interface SafariProps extends SVGProps<SVGSVGElement> {
 export default function Safari({
   src,
   url,
-  width = 1202,
-  height = 790,
+  width = 1200,
+  height = 800,
   ...props
 }: SafariProps) {
   return (
-    <>
+    <div className="my-5 flex justify-center px-4">
       <svg
-        width={width}
-        height={height}
+        style={{ maxWidth: "100%", width: "100vw", height: "auto" }} // Use viewport width for responsiveness
         viewBox={`0 0 ${width} ${height}`}
+        preserveAspectRatio="xMidYMid meet"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         {...props}
       >
         <g clipPath="url(#path0)">
-          {/* <path
-          d="M0 52H1202V741C1202 747.627 1196.63 753 1190 753H12C5.37258 753 0 747.627 0 741V52Z"
-          className="fill-[#E5E5E5] dark:fill-[#ff2121]"
-        /> */}
-
           <path
             fillRule="evenodd"
             clipRule="evenodd"
@@ -126,26 +120,19 @@ export default function Safari({
           </g>
           <image
             href={"/assets/mockup.png"}
-            width="1200"
-            height="720"
+            width={1200}
+            height={720}
             x="1"
             y="52"
             preserveAspectRatio="xMidYMid slice"
-            clipPath="url(#roundedBottom)"
           />
         </g>
         <defs>
           <clipPath id="path0">
             <rect width={width} height={height} fill="white" />
           </clipPath>
-          <clipPath id="roundedBottom">
-            <path
-              d="M1 52H1201V741C1201 747.075 1196.08 752 1190 752H12C5.92486 752 1 747.075 1 741V52Z"
-              fill="white"
-            />
-          </clipPath>
         </defs>
       </svg>
-    </>
+    </div>
   );
 }

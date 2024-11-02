@@ -53,32 +53,27 @@ export default function Home() {
       opacity: 1,
       delay: 1.5,
     });
-    // safariTimeline.fromTo(
-    //   ".stext",
-    //   {
-    //     x: 0,
-    //     y: 10,
-    //     scale: 1,
-    //     delay: 1.5,
-    //     duration: 2,
-    //     opacity: 1,
-    //     ease: "power2.out",
-    //     scrollTrigger: {
-    //       trigger: ".stext",
-    //       start: "top top",
-    //       end: "100% 100%",
-    //       pin: true, // Pin the element
-    //       pinSpacing: false, // No extra space created while pinning
-    //       toggleActions: "play reverse play reverse", // Reverses on scroll up
-    //     },
-    //   },
-    //   {
-    //     x: 0,
-    //     y: 0,
-    //   },
-    // );
+    safariTimeline.to(".stext", {
+      x: -330,
+      y: 280,
+      scale: 1,
+      delay: 1.5,
+      duration: 4,
+      opacity: 1,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".stext",
+        start: "0% 0%",
+        pin: true,
+        pinSpacing: false,
+        scrub: 1,
+        end: "100% 100%",
+      },
+    });
     safariTimeline.to(".safari", {
-      scale: "0.8",
+      x: () => window.innerWidth * 0.2,
+      y: () => window.innerHeight * 0.1,
+      scale: "0.5",
       opacity: 1,
       duration: 4,
       ease: "power2.out",
@@ -93,7 +88,7 @@ export default function Home() {
       },
     });
     gsap.to(".showcase", {
-      x: 0,
+      x: () => window.innerWidth * 0.01,
       duration: 1,
       opacity: 1,
       delay: 2,
@@ -122,7 +117,7 @@ export default function Home() {
 
   return (
     <div className="relative overflow-hidden bg-black text-white">
-      <div className="relative z-10 mx-auto flex flex-col gap-10 p-10 md:container">
+      <div className="relative z-10 flex flex-col gap-10 p-10">
         <div className="mt-8 flex min-h-[50vh] flex-grow flex-col items-center justify-center">
           <h1 className="title text-center text-7xl font-extrabold text-stone-300 opacity-0 drop-shadow-lg">
             Welcome to{" "}
@@ -144,40 +139,43 @@ export default function Home() {
           This website is in development and currently doesnt support proper
           mobile view. Kindly view on desktop!
         </div>
-        <section className="relative hidden h-[100vh] w-full flex-row justify-center md:flex">
+        <section className="relative hidden h-[100vh] w-full flex-row justify-center md:my-4 md:flex">
           <div
-            style={{ filter: "drop-shadow(0 0 40px rgba(74, 222, 128, 0.2))" }}
-            className="safari dark top-0 my-5 flex h-fit items-end justify-center px-5"
+            style={{
+              filter: "drop-shadow(0 0 40px rgba(74, 222, 128, 0.2))",
+            }}
+            className="safari dark absolute top-0 my-5 flex h-fit items-end justify-center px-5"
           >
             <Safari />
           </div>
-        </section>
-        <div className="stext mt-32 flex w-full flex-col items-center justify-center text-white">
-          <div className="huge-code-text">SKETCH</div>
-          <h1 className="text-3xl text-white">Tired of writing Mongoose...</h1>
-          <div className="border-s-4 border-s-white/15 p-3 text-xl">
-            We give you easy to edit models!
-            <span>
-              {" "}
-              <br />
-              This shows what
-            </span>
-            <span className="text-green-400"> MongUi </span> does with{" "}
-            <span className="text-green-400">just the click of a button!</span>
+          <div className="stext absolute flex w-1/2 translate-x-[-900px] translate-y-[100px] flex-col items-start justify-center text-white opacity-0">
+            <div className="huge-code-text text-white/15">SKETCH</div>
+            <h1 className="text-3xl text-white">
+              Tired of writing Mongoose...
+            </h1>
+            <div className="border-s-4 border-s-white/15 p-3 text-xl">
+              We give you easy to edit models!
+              <span>
+                {" "}
+                <br />
+                This shows what
+              </span>
+              <span className="text-green-400"> MongUi </span> does with{" "}
+              <span className="text-green-400">
+                just the click of a button!
+              </span>
+            </div>
           </div>
-        </div>
-
-        <div className="hidden w-full items-center justify-center md:flex">
+        </section>
+        <div className="hidden w-full items-center justify-center gap-3 md:flex">
           <div className="container flex flex-col justify-between gap-5 md:flex-row">
-            <div className="showcase flex translate-x-[-900px] scale-75 justify-start opacity-0 md:w-1/3">
+            <div className="showcase flex translate-x-[-900px] justify-start opacity-0 md:w-1/2">
               <CodeShowcase />
             </div>
             <div className="ctext flex translate-x-[900px] flex-col items-end justify-center text-end opacity-0 md:w-1/2">
               <div className="huge-code-text text-white/15">CODE</div>
-              <h1 className="text-white md:text-3xl">
-                Once designing is done...
-              </h1>
-              <div className="border-e-4 border-e-white/15 p-3 md:text-xl">
+              <h1 className="text-3xl text-white">Once designing is done...</h1>
+              <div className="border-e-4 border-e-white/15 p-3 text-xl">
                 We provide you the code for all models! This code is in{" "}
                 <span className="text-green-400">CommonJS</span> . You can
                 directly just copy and paste this in your backend,{" "}

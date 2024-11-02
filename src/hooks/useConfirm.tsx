@@ -1,6 +1,5 @@
 import React, { useState, useContext, createContext, ReactNode } from "react";
 
-// Create a context for the confirmation dialog
 const ConfirmContext =
   // @ts-ignore
   createContext<(message: string) => Promise<boolean> | null>(null);

@@ -16,6 +16,7 @@ import { DraggableEvent, DraggableData } from "react-draggable";
 import { useModal } from "@/hooks/useModal";
 import { IoMdHome } from "react-icons/io";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function New() {
   const [models, setModels] = useState<Model[]>([]);
@@ -39,6 +40,7 @@ export default function New() {
       setInverseScale(1 / newScale);
     }
   };
+  const router = useRouter();
 
   // PANEEEEE
   const handleDrag = (event: MouseEvent) => {

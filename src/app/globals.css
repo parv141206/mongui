@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Anton&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -34,8 +35,9 @@ body {
   font-family: "Futura", sans-serif;
 }
 .huge-code-text {
-  font-family: "Eddie";
+  font-family: "Anton";
   font-size: 8rem;
+  @apply bg-green-400 px-3 text-black;
 }
 .huge-text {
   font-family: "Peach";
@@ -178,4 +180,10 @@ html {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: gray;
+}
+
+@media screen and (min-zoom: 1.25) {
+  .safari {
+    transform: scale(0.8);
+  }
 }

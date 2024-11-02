@@ -1,10 +1,7 @@
 import { createAllModels } from "@/lib/createAllModels";
 import { Model } from "@/types/Models";
 import React, { useEffect, useState } from "react";
-import Prism from "prismjs";
-
-import "prismjs/themes/prism-tomorrow.css"; // Default Prism theme
-import "dracula-prism/dist/css/dracula-prism.css"; // Import Dracula theme
+import { IoMdClose } from "react-icons/io";
 
 export default function CodeView({
   models,
@@ -16,31 +13,45 @@ export default function CodeView({
   const [copy, setCopy] = useState(false);
   useEffect(() => {
     // Highlight code when models change
-    Prism.highlightAll();
+    // Prism.highlightAll();
   }, [models]);
 
   return (
     <div>
       <div className="absolute top-0 z-20 flex h-screen w-screen items-center justify-center bg-black/50 backdrop-blur-sm">
-        <div className="h-[80%] overflow-y-scroll rounded-lg border border-white/20 bg-[#282a36] p-5">
-          <div className="flex justify-between">
+        <div className="border-white/20s bg-[#282a36]s relative h-[80%] overflow-y-scroll rounded-lg border bg-black">
+          <div
+            style={{
+              background:
+                "linear-gradient(to bottom, black,black ,  transparent)",
+            }}
+            className="sticky top-0 flex justify-between p-5"
+          >
             <h1 className="text-3xl text-white">Heres your code!</h1>
-            <button
-              className={`rounded px-4 py-2 ${copy ? "bg-white text-black" : "border-white-700 border text-white"}`}
-              onClick={() => {
-                // @ts-ignore
-                navigator.clipboard.writeText(createAllModels(models, "cjs"));
-                setCopy(true);
-                setTimeout(() => {
-                  setCopy(false);
-                }, 2000);
-              }}
-            >
-              {copy ? "Copied!" : "Copy"}
-            </button>
+            <div className="flex items-center justify-center gap-1">
+              <button
+                className={`rounded px-4 py-2 ${copy ? "text-white" : "text-gray-200"}`}
+                onClick={() => {
+                  // @ts-ignore
+                  navigator.clipboard.writeText(createAllModels(models, "cjs"));
+                  setCopy(true);
+                  setTimeout(() => {
+                    setCopy(false);
+                  }, 2000);
+                }}
+              >
+                {copy ? "Copied!" : "Copy"}
+              </button>
+              <button
+                className="text-xl font-bold"
+                onClick={() => setIsCodeViewOpen(false)}
+              >
+                <IoMdClose />
+              </button>
+            </div>
           </div>
           <CreateAllModelsOutput models={models} />
-          <div className="mt-4 flex justify-between">
+          <div className="m-5 mt-4 flex justify-between">
             <button
               className="rounded bg-green-700 px-4 py-2 text-white"
               onClick={() => setIsCodeViewOpen(false)}
@@ -69,7 +80,7 @@ function CreateAllModelsOutput({ models }: { models: Model[] }) {
 
       {/* <hr /> */}
 
-      <pre className="language-javascript bg-black">
+      <pre className="bg-black">
         <code>{createAllModels(models, "cjs")}</code>
       </pre>
     </div>

@@ -1,5 +1,6 @@
 import { Model } from "@/types/Models";
 import { js as beautify } from "js-beautify";
+import { toPascalCase } from "./validateModelName";
 
 const unformattedCode = `function example(){if(x){return el;}}`;
 const options = {
@@ -11,13 +12,11 @@ const formattedCode = beautify(unformattedCode, options);
 console.log(formattedCode);
 
 function beautifyAndRemoveEmptyLines(code: string): string {
-  // Remove empty lines
   const cleanedCode = code
     .split("\n")
     .filter((line) => line.trim() !== "")
     .join("\n");
 
-  // Beautify the cleaned code
   const options = {
     indent_size: 2,
     space_in_empty_paren: true,
@@ -27,6 +26,8 @@ function beautifyAndRemoveEmptyLines(code: string): string {
 }
 
 export function createModel(model: Model, moduleType: "esm" | "cjs") {
+  const formattedCollectionName = toPascalCase(model.collection_name);
+
   const fieldsString = model.fields
     .map((field) => {
       return `${field.name}: {
@@ -39,26 +40,24 @@ export function createModel(model: Model, moduleType: "esm" | "cjs") {
     .join(",\n    ");
 
   const modelDefinition = `
-const ${model.collection_name} = new Schema({
+const ${formattedCollectionName} = new Schema({
     ${fieldsString}
 });
 
-const ${model.collection_name}Model = mongoose.model('${model.collection_name}', ${model.collection_name});
+const ${formattedCollectionName}Model = mongoose.model('${formattedCollectionName}', ${formattedCollectionName});
 `;
 
   const formattedCode = beautifyAndRemoveEmptyLines(modelDefinition);
 
-  // Conditional export based on moduleType
   if (moduleType === "esm") {
-    return `${formattedCode}\n\nexport default ${model.collection_name}Model;`;
+    return `${formattedCode}\n\nexport default ${formattedCollectionName}Model;`;
   } else if (moduleType === "cjs") {
-    return `${formattedCode}\n\nmodule.exports = ${model.collection_name}Model;`;
+    return `${formattedCode}\n\nmodule.exports = ${formattedCollectionName}Model;`;
   } else {
     throw new Error("Invalid module type. Use 'esm' or 'cjs'.");
   }
 }
 
-// Example usage:
 console.log(
   createModel(
     {
@@ -93,6 +92,6 @@ console.log(
         },
       ],
     },
-    "esm", // Change to 'cjs' for CommonJS format
+    "esm", 
   ),
 );
