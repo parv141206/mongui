@@ -1,6 +1,8 @@
 # [MongUI](https://mongui.vercel.app/)
 MongUI is a simple tool which helps you create mongoose models in JS without writing their code!
-🐱‍🏍 Its completely FREE! 
+
+🐱‍🏍 Its completely FREE!
+
 🐱‍🏍 You can just create these models visually on our website and export them as code!
 
 😄 Pretty neat init?
