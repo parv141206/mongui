@@ -130,8 +130,8 @@ export default function Home() {
               MongUi
             </span>
           </h1>
-          <p className="description mt-4 max-w-md text-center text-lg leading-relaxed text-gray-400 opacity-0">
-            Generate Mongoose queries effortlessly with{" "}
+          <p className="description mt-4 max-w-md text-3xl text-center  leading-relaxed text-gray-400 opacity-0">
+            Generate Mongoose Models effortlessly with{" "}
             <span className="text-white">MongUi</span>.
           </p>
           <Link href={"/new"}>
@@ -231,10 +231,11 @@ export default function Home() {
           <div className="huge-code-text absolute top-0 z-0 text-white/15">
             LETS GO
           </div>
-          <div className="relative z-10 text-5xl text-white">
+          <div className="relative z-10 translate-y-24 bg-black text-5xl text-white">
+            
             So what are you waiting for?
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 translate-y-24 bg-black">
             <Link href={"/new"}>
               <button className="z-10 mt-6 translate-y-10 rounded-xl bg-stone-300 px-6 py-2 text-black transition hover:bg-gray-200">
                 Get Started
