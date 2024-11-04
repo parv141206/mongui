@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { cn } from "@/lib/utils";
 import AnimatedGridPattern from "@/components/ui/animated-grid-pattern";
@@ -17,7 +17,42 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
+  const containerRef = useRef(null);
+  const childRef = useRef(null);
+  const textRef = useRef(null);
   useEffect(() => {
+    gsap.to(childRef.current, {
+      scale: 0.5, // Scale down to 50%
+      x: 300, // Move to the right by 200 pixels
+      y: 0,
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: "top top", // Trigger when the top of the container hits center of viewport
+        end: "bottom center", // End when the bottom of the container hits top of viewport
+        scrub: true, // Smooth scrubbing
+        markers: true, // Show markers for debugging (remove in production)
+        pin: true,
+      },
+    });
+
+    gsap.fromTo(
+      textRef.current,
+      {
+        x: -1000,
+        opacity: 0,
+      },
+      {
+        x: 0,
+        opacity: 1,
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "bottom center",
+          scrub: true,
+          markers: true,
+        },
+      },
+    );
     gsap.fromTo(
       ".title",
       { y: -50 },
@@ -77,21 +112,21 @@ export default function Home() {
     //     y: 0,
     //   },
     // );
-    safariTimeline.to(".safari", {
-      scale: "0.8",
-      opacity: 1,
-      duration: 4,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: ".safari",
-        start: "top top",
-        end: "100% 200%",
-        scrub: 1, // Smooth scroll-based animation
-        pin: true, // Pin the element
-        pinSpacing: false, // No extra space created while pinning
-        toggleActions: "play reverse play reverse", // Reverses on scroll up
-      },
-    });
+    // safariTimeline.to(".safari", {
+    //   scale: "0.8",
+    //   opacity: 1,
+    //   duration: 4,
+    //   ease: "power2.out",
+    //   scrollTrigger: {
+    //     trigger: ".safari",
+    //     start: "top top",
+    //     end: "100% 200%",
+    //     scrub: 1, // Smooth scroll-based animation
+    //     pin: true, // Pin the element
+    //     pinSpacing: false, // No extra space created while pinning
+    //     toggleActions: "play reverse play reverse", // Reverses on scroll up
+    //   },
+    // });
     gsap.to(".showcase", {
       x: 0,
       duration: 1,
@@ -118,6 +153,10 @@ export default function Home() {
         end: "bottom 100%",
       },
     });
+    return () => {
+      // Cleanup on component unmount
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
   }, []);
 
   return (
@@ -130,7 +169,7 @@ export default function Home() {
               MongUi
             </span>
           </h1>
-          <p className="description mt-4 max-w-md text-3xl text-center  leading-relaxed text-gray-400 opacity-0">
+          <p className="description mt-4 max-w-md text-center text-3xl leading-relaxed text-gray-400 opacity-0">
             Generate Mongoose Models effortlessly with{" "}
             <span className="text-white">MongUi</span>.
           </p>
@@ -144,30 +183,44 @@ export default function Home() {
           This website is in development and currently doesnt support proper
           mobile view. Kindly view on desktop!
         </div>
-        <section className="relative hidden h-[100vh] w-full flex-row justify-center md:flex">
+        <section
+          style={{ perspective: "1000px" }}
+          ref={containerRef}
+          className="safari-container relative flex h-[100vh] w-full flex-col items-center justify-center md:flex-row"
+        >
+          <section
+            ref={textRef}
+            className="stext absolute left-0 mt-32 flex h-fit w-fit flex-col items-center justify-center text-white"
+          >
+            <div className="huge-code-text">SKETCH</div>
+            <h1 className="text-3xl text-white">
+              {" "}
+              Tired of writing Mongoose...{" "}
+            </h1>
+            <div className="border-s-4 border-s-white/15 p-3 text-xl">
+              We give you easy to edit models!
+              <span>
+                {" "}
+                <br /> This shows what{" "}
+              </span>
+              <span className="text-green-400"> MongUi </span> does with{" "}
+              <span className="text-green-400">
+                {" "}
+                just the click of a button!{" "}
+              </span>
+            </div>
+          </section>
+
           <div
+            ref={childRef}
             style={{ filter: "drop-shadow(0 0 40px rgba(74, 222, 128, 0.2))" }}
-            className="safari dark top-0 my-5 flex h-fit items-end justify-center px-5"
+            className="safari dark flex items-start justify-center px-5"
           >
             <Safari />
           </div>
         </section>
-        <div className="stext mt-32 flex w-full flex-col items-center justify-center text-white">
-          <div className="huge-code-text">SKETCH</div>
-          <h1 className="text-3xl text-white">Tired of writing Mongoose...</h1>
-          <div className="border-s-4 border-s-white/15 p-3 text-xl">
-            We give you easy to edit models!
-            <span>
-              {" "}
-              <br />
-              This shows what
-            </span>
-            <span className="text-green-400"> MongUi </span> does with{" "}
-            <span className="text-green-400">just the click of a button!</span>
-          </div>
-        </div>
 
-        <div className="hidden w-full items-center justify-center md:flex">
+        <div className="mt-32 hidden w-full items-center justify-center md:flex">
           <div className="container flex flex-col justify-between gap-5 md:flex-row">
             <div className="showcase flex translate-x-[-900px] scale-75 justify-start opacity-0 md:w-1/3">
               <CodeShowcase />
@@ -232,10 +285,9 @@ export default function Home() {
             LETS GO
           </div>
           <div className="relative z-10 translate-y-24 bg-black text-5xl text-white">
-            
             So what are you waiting for?
           </div>
-          <div className="flex gap-3 translate-y-24 bg-black">
+          <div className="flex translate-y-24 gap-3 bg-black">
             <Link href={"/new"}>
               <button className="z-10 mt-6 translate-y-10 rounded-xl bg-stone-300 px-6 py-2 text-black transition hover:bg-gray-200">
                 Get Started
