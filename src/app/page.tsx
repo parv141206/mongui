@@ -22,15 +22,14 @@ export default function Home() {
   const textRef = useRef(null);
   useEffect(() => {
     gsap.to(childRef.current, {
-      scale: 0.5, // Scale down to 50%
-      x: 300, // Move to the right by 200 pixels
+      scale: 0.5, 
+      x: 300, 
       y: 0,
       scrollTrigger: {
         trigger: containerRef.current,
-        start: "top top", // Trigger when the top of the container hits center of viewport
-        end: "bottom center", // End when the bottom of the container hits top of viewport
-        scrub: true, // Smooth scrubbing
-        markers: true, // Show markers for debugging (remove in production)
+        start: "top top", 
+        end: "bottom center", 
+        scrub: true,
         pin: true,
       },
     });
@@ -49,7 +48,6 @@ export default function Home() {
           start: "top top",
           end: "bottom center",
           scrub: true,
-          markers: true,
         },
       },
     );
