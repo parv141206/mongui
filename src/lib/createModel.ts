@@ -2,14 +2,7 @@ import { Model } from "@/types/Models";
 import { js as beautify } from "js-beautify";
 import { toPascalCase } from "./validateModelName";
 
-const unformattedCode = `function example(){if(x){return el;}}`;
-const options = {
-  indent_size: 2,
-  space_in_empty_paren: true,
-};
 
-const formattedCode = beautify(unformattedCode, options);
-console.log(formattedCode);
 
 function beautifyAndRemoveEmptyLines(code: string): string {
   const cleanedCode = code
@@ -40,19 +33,19 @@ export function createModel(model: Model, moduleType: "esm" | "cjs") {
     .join(",\n    ");
 
   const modelDefinition = `
-const ${formattedCollectionName} = new Schema({
+const ${formattedCollectionName}Schema = new Schema({
     ${fieldsString}
 });
 
-const ${formattedCollectionName}Model = mongoose.model('${formattedCollectionName}', ${formattedCollectionName});
+const ${formattedCollectionName} = mongoose.model('${formattedCollectionName}', ${formattedCollectionName}Schema);
 `;
 
   const formattedCode = beautifyAndRemoveEmptyLines(modelDefinition);
 
   if (moduleType === "esm") {
-    return `${formattedCode}\n\nexport default ${formattedCollectionName}Model;`;
+    return `${formattedCode}\n\nexport default ${formattedCollectionName};`;
   } else if (moduleType === "cjs") {
-    return `${formattedCode}\n\nmodule.exports = ${formattedCollectionName}Model;`;
+    return `${formattedCode}\n\nmodule.exports = ${formattedCollectionName};`;
   } else {
     throw new Error("Invalid module type. Use 'esm' or 'cjs'.");
   }
