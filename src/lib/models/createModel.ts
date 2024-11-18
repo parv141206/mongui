@@ -1,22 +1,5 @@
 import { Model } from "@/types/Models";
-import { js as beautify } from "js-beautify";
-import { toPascalCase } from "./validateModelName";
-
-
-
-function beautifyAndRemoveEmptyLines(code: string): string {
-  const cleanedCode = code
-    .split("\n")
-    .filter((line) => line.trim() !== "")
-    .join("\n");
-
-  const options = {
-    indent_size: 2,
-    space_in_empty_paren: true,
-  };
-
-  return beautify(cleanedCode, options);
-}
+import { beautifyAndRemoveEmptyLines, toPascalCase } from "../utils";
 
 export function createModel(model: Model, moduleType: "esm" | "cjs") {
   const formattedCollectionName = toPascalCase(model.collection_name);
@@ -85,6 +68,6 @@ console.log(
         },
       ],
     },
-    "esm", 
+    "esm",
   ),
 );

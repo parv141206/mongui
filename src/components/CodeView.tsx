@@ -1,4 +1,4 @@
-import { createAllModels } from "@/lib/createAllModels";
+import { createAllModels } from "@/lib/models/createAllModels";
 import { Model } from "@/types/Models";
 import React, { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
