@@ -7,3 +7,7 @@ export type FetchController = {
   sort?: Object;
   limit?: number;
 };
+export type InsertController = {
+  modelName: string;
+  insertMany?: boolean;
+};
