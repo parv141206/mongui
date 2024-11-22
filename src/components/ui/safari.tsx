@@ -120,11 +120,11 @@ export default function Safari({
           </g>
           <image
             href={"/assets/mockup.png"}
-            width={1200}
-            height={720}
-            x="1"
-            y="52"
-            preserveAspectRatio="xMidYMid slice"
+           width="1212"
+      height="650"
+      x="1"
+      y="52"
+      preserveAspectRatio="xMidYMid meet" 
           />
         </g>
         <defs>

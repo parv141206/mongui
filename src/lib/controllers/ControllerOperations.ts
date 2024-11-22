@@ -3,7 +3,7 @@ export type FetchController = {
   findAll?: boolean;
   query?: Object;
   findOne?: boolean;
-  onlySpecifiedFields?: Array<string>;
+  // onlySpecifiedFields?: Array<string>;
   sort?: Object;
   limit?: number;
 };

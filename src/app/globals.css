@@ -3,7 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
-input {
+.normal-input {
   @apply rounded-xl border border-white/25 bg-black p-3;
 }
 select {
@@ -186,4 +186,14 @@ html {
   .safari {
     transform: scale(0.8);
   }
+}
+.controller-input {
+  @apply border-b border-white/50 bg-black p-3 text-5xl focus:border-b focus:outline-none;
+}
+.button {
+  @apply w-fit rounded-md bg-white px-2 py-1 text-3xl font-bold text-black;
+}
+
+.checkbox {
+  @apply bg-black checked:bg-blue-300;
 }
