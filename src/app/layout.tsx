@@ -2,7 +2,6 @@
 import { ModalProvider } from "@/hooks/useModal";
 import "./globals.css";
 import { ConfirmProvider } from "@/hooks/useConfirm";
-import Head from "next/head";
 
 export default function RootLayout({
   children,
