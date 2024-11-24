@@ -1,5 +1,5 @@
 export type FetchController = {
-  modelName: string;
+  modelName: string | String;
   findAll?: boolean;
   query?: Object;
   findOne?: boolean;

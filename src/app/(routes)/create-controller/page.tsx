@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 
 export default function CreateController() {
   const [step, setStep] = useState(0);
+  const [code, setCode] = useState("");
   console.log(
     generateController(
       "fetch",
@@ -115,11 +116,16 @@ export default function CreateController() {
             <div className="options container mx-auto flex w-2/3 flex-col gap-5 p-10">
               <div className="text-5xl">Few options...</div>
 
-              <InputControllerOptions modelName = {modelName} />
+              <InputControllerOptions setCode={setCode} modelName={modelName} />
 
               <button onClick={chooseOperation} className="button">
                 Continue
               </button>
+              {code && (
+                <div className="code-container">
+                  <pre className="code">{code}</pre>
+                </div>
+              )}
             </div>
           )}
         </div>
