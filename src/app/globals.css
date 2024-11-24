@@ -4,10 +4,10 @@
 @tailwind utilities;
 
 .normal-input {
-  @apply rounded-xl border border-white/25 bg-black p-3;
+  @apply rounded-md border border-white/25 bg-black p-3;
 }
 select {
-  @apply rounded-xl border border-white/25 bg-black p-3;
+  @apply rounded-md border border-white/25 bg-black p-3;
 }
 @font-face {
   font-family: "Aptos";
@@ -188,10 +188,10 @@ html {
   }
 }
 .controller-input {
-  @apply border-b border-white/50 bg-black p-3 text-5xl focus:border-b focus:outline-none;
+  @apply border-b border-white/50 bg-black p-3 text-2xl focus:border-b focus:outline-none;
 }
 .button {
-  @apply w-fit rounded-md bg-white px-2 py-1 text-3xl font-bold text-black;
+  @apply w-fit rounded-sm border border-white/30 bg-black px-2 py-1 text-2xl text-white hover:bg-white hover:text-black;
 }
 
 .checkbox {

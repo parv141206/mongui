@@ -47,40 +47,40 @@ export default function CreateController() {
     setTimeout(() => setStep(2), 1000);
   };
   return (
-    <div className="flex min-h-screen bg-black py-24 text-white">
+    <div className="flex min-h-screen bg-black py-16 text-white">
       <div className="container mx-auto flex flex-col gap-3 p-5">
-        <div className="greetings text-7xl">
+        <div className="greetings text-6xl">
           Create <span className="text-green-400"> Controllers</span>
         </div>
-        <hr className="border border-green-400" />
+        <hr className="border border-white" />
         <div className="flex">
-          <div className="flex h-full flex-col gap-3 py-5 text-3xl">
+          <div className="flex h-full flex-col gap-3 py-5 text-2xl">
             <div
-              className={`border-s border-green-400 p-3 ${step === 0 ? "bg-green-400/45" : ""}`}
+              className={`rounded border-s border-green-800 p-3 ${step === 0 ? "bg-green-400/45" : ""}`}
             >
               Model Name
             </div>
             <div
-              className={`border-s border-green-400 p-3 ${step === 1 ? "bg-green-400/45" : ""}`}
+              className={`rounded border-s border-green-800 p-3 ${step === 1 ? "bg-green-400/45" : ""}`}
             >
-              Type of operation
+              Operation Type
             </div>
             <div
-              className={`border-s border-green-400 p-3 ${step === 2 ? "bg-green-400/45" : ""}`}
+              className={`rounded border-s border-green-800 p-3 ${step === 2 ? "bg-green-400/45" : ""}`}
             >
-              Options
+              Custom Options
             </div>
           </div>
           {step === 0 && (
             <div className="input-model container mx-auto flex w-2/3 cursor-pointer flex-col gap-5 p-10">
-              <div className="text-5xl">
-                Please enter the name of your model
+              <div className="text-4xl">
+                Please enter the name of your model:
               </div>
               <input
                 onChange={(e) => setModelName(e.target.value)}
                 type="text"
                 className="controller-input"
-                placeholder="Model Name"
+                placeholder="Name"
               />
               <div onClick={chooseModel} className="button">
                 Submit
@@ -90,19 +90,19 @@ export default function CreateController() {
 
           {step === 1 && (
             <div className="operation-type container mx-auto flex w-2/3 flex-col gap-5 p-10">
-              <div className="text-5xl">
+              <div className="text-4xl">
                 Please choose which operation controller do you want:
               </div>
-              <div className="flex gap-3 text-3xl">
+              <div className="flex gap-3 text-2xl">
                 <div
                   onClick={() => setOperationType("fetch")}
-                  className={` ${operationType === "fetch" ? "rounded-md bg-white text-black" : "hover:text-green-400"} cursor-pointer p-3`}
+                  className={` ${operationType === "fetch" ? "rounded-md bg-white text-black" : "hover:text-green-400"} cursor-pointer p-2`}
                 >
                   Fetch
                 </div>
                 <div
                   onClick={() => setOperationType("insert")}
-                  className={` ${operationType === "insert" ? "rounded-md bg-white text-black" : "hover:text-green-400"} cursor-pointer p-3`}
+                  className={` ${operationType === "insert" ? "rounded-md bg-white text-black" : "hover:text-green-400"} cursor-pointer p-2`}
                 >
                   Insert
                 </div>
@@ -114,7 +114,7 @@ export default function CreateController() {
           )}
           {step === 2 && operationType === "fetch" && (
             <div className="options container mx-auto flex w-2/3 flex-col gap-5 p-10">
-              <div className="text-5xl">Few options...</div>
+              <div className="text-5xl">Customisation</div>
 
               <InputControllerOptions setCode={setCode} modelName={modelName} />
 
@@ -122,7 +122,7 @@ export default function CreateController() {
                 Continue
               </button>
               {code && (
-                <div className="code-container">
+                <div className="rounded-md border border-white bg-black text-white">
                   <pre className="code">{code}</pre>
                 </div>
               )}

@@ -112,9 +112,10 @@ export default function InputControllerOptions({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex flex-col gap-4 rounded-lg border border-blue-300 p-5">
-        <div className="text-3xl">Enter query for fetching</div>
-        <div className="text-sm text-blue-300">
+      <div className="flex flex-col gap-4 rounded-md border-2 border-blue-300/70 p-5">
+        <div className="text-3xl">Enter Fetch Query</div>
+        <hr className="border border-white/30" />
+        <div className="text-md text-yellow-400">
           ! Leave blank if you want to fetch everything
         </div>
 
@@ -130,7 +131,7 @@ export default function InputControllerOptions({
             />
             <button
               onClick={() => removeInput(input.id)}
-              className="rounded-lg bg-red-500 p-2 text-white"
+              className="rounded-sm bg-red-600 p-2 text-white"
               aria-label="Remove parameter"
             >
               <IoTrashBin className="h-5 w-5" />
@@ -140,15 +141,15 @@ export default function InputControllerOptions({
 
         <button
           onClick={addInput}
-          className="flex w-fit items-center rounded bg-blue-500 p-2 text-white"
+          className="flex w-fit items-center rounded-lg border border-white/30 bg-black p-2 text-white hover:bg-blue-300 hover:text-black"
           aria-label="Add parameter"
         >
-          Add parameter
+          Add Parameter
         </button>
       </div>
-      <div className="flex flex-col gap-3 rounded-lg border border-green-300 p-5">
+      <div className="flex flex-col gap-3 rounded-md border-2 border-green-300/70 p-5">
         <Checkbox
-          label="Enable Sorting"
+          label="Enable Sort"
           onChange={(checked) => {
             setSortState(checked);
           }}
@@ -158,13 +159,13 @@ export default function InputControllerOptions({
         {/* Sort Inputs */}
         {sortState && (
           <>
-            <div className="mt-5 text-3xl">Enter sorting options</div>
+            <div className="text-2xl">Edit Sorting Options</div>
 
             {sortInputs.map((sortInput) => (
               <div key={sortInput.id} className="flex items-center gap-2">
                 <input
                   type="text"
-                  placeholder={`field`}
+                  placeholder={`Field`}
                   className="normal-input"
                   value={sortInput.field}
                   onChange={(e) =>
@@ -190,7 +191,7 @@ export default function InputControllerOptions({
                 </select>
                 <button
                   onClick={() => removeSortInput(sortInput.id)}
-                  className="rounded-lg bg-red-500 p-2 text-white"
+                  className="rounded-sm bg-red-500 p-2 text-white"
                   aria-label="Remove sorting parameter"
                 >
                   <IoTrashBin className="h-5 w-5" />
@@ -200,18 +201,20 @@ export default function InputControllerOptions({
 
             <button
               onClick={addSortInput}
-              className="flex w-fit items-center rounded bg-blue-500 p-2 text-white"
+              className="flex w-fit items-center rounded-lg border border-white/30 bg-black p-2 text-white hover:bg-white hover:text-black"
               aria-label="Add sorting parameter"
             >
-              Add sorting parameter
+              Add Sort Parameter
             </button>
           </>
         )}
       </div>
       {/* Fetch Options */}
       <div className="">
-        <div className="flex flex-col gap-3 rounded-lg border border-blue-300 p-5">
-          <div className="text-3xl">Additional options</div>
+        <div className="flex flex-col gap-3 rounded-md border-2 border-white/70 p-5">
+          <div className="text-3xl">Additional Options</div>
+          <hr className="border border-white/30" />
+
           <Checkbox
             label="Find All"
             onChange={(checked) => {
@@ -244,7 +247,7 @@ export default function InputControllerOptions({
           />
           <label>
             Limit{"   "}
-            <span className="mx-2 text-sm text-blue-300">
+            <span className="mx-2 text-sm text-yellow-400">
               If you want to limit the number of results, disable findAll and
               findOne
             </span>
