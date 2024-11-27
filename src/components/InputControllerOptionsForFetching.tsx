@@ -3,7 +3,7 @@ import { IoTrashBin } from "react-icons/io5";
 import { Checkbox } from "./Checkbox";
 import { generateController } from "@/lib/controllers/generateController";
 
-export default function InputControllerOptions({
+export default function InputControllerOptionsForFetching({
   setCode,
   modelName,
 }: {
@@ -112,7 +112,7 @@ export default function InputControllerOptions({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex flex-col gap-4 rounded-md border-2 border-blue-300/70 p-5">
+      <div className="flex flex-col gap-4 rounded-md border-2 border-blue-300/20 p-5">
         <div className="text-3xl">Enter Fetch Query</div>
         <hr className="border border-white/30" />
         <div className="text-md text-yellow-400">
@@ -147,7 +147,7 @@ export default function InputControllerOptions({
           Add Parameter
         </button>
       </div>
-      <div className="flex flex-col gap-3 rounded-md border-2 border-green-300/70 p-5">
+      <div className="flex flex-col gap-3 rounded-md border-2 border-green-300/30 p-5">
         <Checkbox
           label="Enable Sort"
           onChange={(checked) => {
@@ -211,7 +211,7 @@ export default function InputControllerOptions({
       </div>
       {/* Fetch Options */}
       <div className="">
-        <div className="flex flex-col gap-3 rounded-md border-2 border-white/70 p-5">
+        <div className="flex flex-col gap-3 rounded-md border-2 border-white/30 p-5">
           <div className="text-3xl">Additional Options</div>
           <hr className="border border-white/30" />
 

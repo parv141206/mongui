@@ -1,5 +1,7 @@
 "use client";
-import InputControllerOptions from "@/components/InputControllerOptions";
+import InputControllerOptionsForDeleting from "@/components/InputControllerOptionsForDeleting";
+import InputControllerOptionsForFetching from "@/components/InputControllerOptionsForFetching";
+import InputControllerOptionsForInserting from "@/components/InputControllerOptionsForInserting";
 import { generateController } from "@/lib/controllers/generateController";
 import gsap from "gsap";
 import React, { useEffect, useState } from "react";
@@ -7,6 +9,13 @@ import React, { useEffect, useState } from "react";
 export default function CreateController() {
   const [step, setStep] = useState(0);
   const [code, setCode] = useState("");
+  console.log(
+    generateController(
+      "delete",
+      { modelName: "User", query: { age: "meriMamiTeriMasi" } },
+      "function",
+    ),
+  );
   console.log(
     generateController(
       "fetch",
@@ -106,6 +115,12 @@ export default function CreateController() {
                 >
                   Insert
                 </div>
+                <div
+                  onClick={() => setOperationType("delete")}
+                  className={` ${operationType === "delete" ? "rounded-md bg-white text-black" : "hover:text-green-400"} cursor-pointer p-2`}
+                >
+                  Delete
+                </div>
               </div>
               <button onClick={chooseOperation} className="button">
                 Continue
@@ -116,13 +131,45 @@ export default function CreateController() {
             <div className="options container mx-auto flex w-2/3 flex-col gap-5 p-10">
               <div className="text-5xl">Customisation</div>
 
-              <InputControllerOptions setCode={setCode} modelName={modelName} />
+              <InputControllerOptionsForFetching
+                setCode={setCode}
+                modelName={modelName}
+              />
 
-              <button onClick={chooseOperation} className="button">
-                Continue
-              </button>
               {code && (
                 <div className="rounded-md border border-white bg-black text-white">
+                  <pre className="code">{code}</pre>
+                </div>
+              )}
+            </div>
+          )}
+          {step === 2 && operationType === "insert" && (
+            <div className="options container mx-auto flex w-2/3 flex-col gap-5 p-10">
+              <div className="text-5xl">Customisation</div>
+
+              <InputControllerOptionsForInserting
+                setCode={setCode}
+                modelName={modelName}
+              />
+
+              {code && (
+                <div className="rounded-md border border-white/10 bg-black p-5 text-white">
+                  <pre className="code">{code}</pre>
+                </div>
+              )}
+            </div>
+          )}
+          {step === 2 && operationType === "delete" && (
+            <div className="options container mx-auto flex w-2/3 flex-col gap-5 p-10">
+              <div className="text-5xl">Customisation</div>
+
+              <InputControllerOptionsForDeleting
+                setCode={setCode}
+                modelName={modelName}
+              />
+
+              {code && (
+                <div className="rounded-md border border-white/10 bg-black p-5 text-white">
                   <pre className="code">{code}</pre>
                 </div>
               )}
