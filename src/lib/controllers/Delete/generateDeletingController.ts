@@ -32,7 +32,7 @@ export function generateDeletingController(
         try {
             const { ${modelNameWithoutS.toLowerCase()} } = req.body;
 
-            const deleted${modelNameWithoutS} = await ${model.modelName}.findOneAndDelete(${model.query ? JSON.stringify(model.query) : `{ id: ${modelNameWithoutS.toLowerCase()} }`});
+            const deleted${modelNameWithoutS} = await ${model.modelName}.findOneAndDelete(${model.query ?model.query.map(query => `{ ${query} }`).join(", "): `{ id: ${modelNameWithoutS.toLowerCase()} }`});
 
             res.status(200).json({
                 success: true,
@@ -60,7 +60,7 @@ export function generateDeletingController(
         try {
             const { ${modelNameWithoutS.toLowerCase()} } = req.body;
 
-            const deleted${modelNameWithoutS} = await ${model.modelName}.findOneAndDelete(${model.query ? JSON.stringify(model.query) : `{ id: ${modelNameWithoutS.toLowerCase()} }`});
+            const deleted${modelNameWithoutS} = await ${model.modelName}.findOneAndDelete(${model.query ?  model.query.map((query) => `{ ${query} }`).join(", ") : ` id: {${modelNameWithoutS.toLowerCase()}} `});
 
             return deleted${modelNameWithoutS};
         } catch (error) {
@@ -91,13 +91,10 @@ function getOuterFunction(model: DeleteController) {
     functionName = `deleteMultiple${toPascalCase(model.modelName)}`;
   } else {
     if (model.query) {
-      let cleanedObject = cleanObject(model.query);
-      let firstQuery = Object.keys(cleanedObject)[0] ?? "";
-      let secondQuery = Object.keys(cleanedObject)[1] ?? "";
 
-      functionName = `delete ${modelNameWithoutS} ${firstQuery ? `By ${firstQuery}` : ""} ${secondQuery ? `And ${secondQuery}` : ""}`;
+      functionName = `delete ${modelNameWithoutS}`;
     } else {
-      functionName = `delete${toPascalCase(model.modelName)}`;
+      functionName = `delete ${modelNameWithS}`;
     }
   }
 

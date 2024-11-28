@@ -12,22 +12,22 @@ export default function CreateController() {
   console.log(
     generateController(
       "delete",
-      { modelName: "User", query: { age: "meriMamiTeriMasi" } },
+      { modelName: "User", query: [`name: "parv"`] },
       "function",
     ),
   );
-  console.log(
-    generateController(
-      "fetch",
-      {
-        modelName: "User",
-        // findOne: true,
-        query: { name: "meriMamiTeriMasi" },
-        // sort: { createdAt: -1 },
-      },
-      "function",
-    ),
-  );
+  //console.log(
+  //  generateController(
+  //    "fetch",
+  //    {
+  //      modelName: "User",
+  //      // findOne: true,
+  //      query: { name: "meriMamiTeriMasi" },
+  //      // sort: { createdAt: -1 },
+  //    },
+  //    "function",
+  //  ),
+  //);
   const [modelName, setModelName] = useState("");
   const [operationType, setOperationType] = useState("");
   useEffect(() => {

@@ -1,52 +1,54 @@
 import React, { useState } from "react";
 import { IoTrashBin } from "react-icons/io5";
-import { generateController } from "@/lib/controllers/generateController"; // Assuming this is your controller generator
+import { generateController } from "@/lib/controllers/generateController";
 
 export default function InputControllerOptionsForDeleting({
   setCode,
   modelName,
 }: {
   setCode: (code: string) => void;
-  modelName: string; // Changed to lowercase 'string' for consistency
+  modelName: string;
 }) {
   const [typeOfCode, setTypeOfCode] = useState<"route" | "function">("route");
   const [inputs, setInputs] = useState([{ id: Date.now(), value: "" }]);
   const [deleteOperationOptions, setDeleteOperationOptions] = useState({
-    query: {},
+    query: [],
   });
+  const [error, setError] = useState("");
+
   const handleInputChange = (id, value) => {
-    setInputs(
-      inputs.map((input) => (input.id === id ? { ...input, value } : input)),
+    const updatedInputs = inputs.map((input) =>
+      input.id === id ? { ...input, value } : input
     );
+    
+    setInputs(updatedInputs);
 
-    const newQuery = {};
-    inputs.forEach((input) => {
+    let hasError = false;
+    const newQueries = [];
+
+    updatedInputs.forEach((input) => {
       if (input.value) {
-        const [key, val] = input.value.split("=").map((item) => item.trim());
-        if (key) {
-          let numericValue;
+        const [key, val] = input.value.split(":").map((item) => item.trim());
 
-          if (typeof val === "string" && val.trim() !== "") {
-            const parsedValue = parseFloat(val);
-            if (!isNaN(parsedValue)) {
-              numericValue = parsedValue;
-            } else {
-              numericValue = val.replace(/"/g, "");
-            }
-          }
+        if (input.value.includes("=")) {
+          setError("Please use ':' instead of '='.");
+          hasError = true;
+          return;         }
 
-          if (numericValue !== undefined) {
-            newQuery[key] = numericValue;
-          }
-        }
+        if (!key || !val) {
+          hasError = true;
+          return;         }
+
+        newQueries.push(`${key}: ${val.replace(/"/g, "").trim()}`);
       }
     });
 
-    // Assuming you have a state to hold the delete operation options
-    setDeleteOperationOptions((prev) => ({
-      ...prev,
-      query: newQuery,
-    }));
+    if (!hasError) {
+      setError("");       setDeleteOperationOptions((prev) => ({
+        ...prev,
+        query: newQueries,
+      }));
+    }
   };
 
   const addInput = () => {
@@ -60,17 +62,12 @@ export default function InputControllerOptionsForDeleting({
   const handleSubmit = () => {
     const deleteOptions = {
       modelName,
-      query: inputs.reduce((acc, input) => {
-        if (input.value) {
-          const [key, val] = input.value.split("=").map((item) => item.trim());
-          acc[key] = val;
-        }
-        return acc;
-      }, {}),
+      query: deleteOperationOptions.query,
       typeOfCode,
     };
-
-    // Generate the delete controller code
+    
+    console.log(deleteOptions);
+    
     const code = generateController("delete", deleteOptions, typeOfCode);
     console.log(code);
     setCode(code);
@@ -86,12 +83,13 @@ export default function InputControllerOptionsForDeleting({
             ! Leave blank if you want to delete everything
           </div>
 
-          {/* Query Inputs */}
+          {error && <div className="text-red-500">{error}</div>}
+
           {inputs.map((input) => (
             <div key={input.id} className="flex items-center gap-3">
               <input
                 type="text"
-                placeholder={`name = "cool"`}
+                placeholder={`name: "cool"`}
                 className="normal-input"
                 value={input.value}
                 onChange={(e) => handleInputChange(input.id, e.target.value)}

@@ -1,30 +1,34 @@
 import { useId } from "react";
-
 import { cn } from "@/lib/utils";
 
 interface DotPatternProps {
-  width?: any;
-  height?: any;
-  x?: any;
-  y?: any;
-  cx?: any;
-  cy?: any;
-  cr?: any;
+  width?: number; // Use number type for width and height
+  height?: number;
+  x?: number;
+  y?: number;
+  cx?: number;
+  cy?: number;
+  cr?: number; // Circle radius
   className?: string;
   [key: string]: any;
 }
+
 export function DotPattern({
   width = 16,
   height = 16,
   x = 0,
   y = 0,
-  cx = 1,
-  cy = 1,
-  cr = 1,
+  cx = width / 2, // Center circle horizontally
+  cy = height / 2, // Center circle vertically
+  cr = Math.min(width, height) / 4, // Default radius based on size
   className,
   ...props
 }: DotPatternProps) {
   const id = useId();
+
+  // Calculate the number of circles based on width and height
+  const numCirclesX = Math.ceil(100 / width); // Adjust for desired density
+  const numCirclesY = Math.ceil(100 / height); // Adjust for desired density
 
   return (
     <svg
@@ -45,7 +49,15 @@ export function DotPattern({
           x={x}
           y={y}
         >
-          <circle id="pattern-circle" cx={cx} cy={cy} r={cr} />
+          {/* Render circles in a grid */}
+          {Array.from({ length: numCirclesX * numCirclesY }).map((_, index) => {
+            const circleX = (index % numCirclesX) * width + cx; // Calculate X position
+            const circleY = Math.floor(index / numCirclesX) * height + cy; // Calculate Y position
+            
+            return (
+              <circle key={index} cx={circleX} cy={circleY} r={cr} />
+            );
+          })}
         </pattern>
       </defs>
       <rect width="100%" height="100%" strokeWidth={0} fill={`url(#${id})`} />

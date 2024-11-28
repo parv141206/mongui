@@ -13,6 +13,6 @@ export type InsertController = {
 };
 export type DeleteController = {
   modelName: string;
-  query?: Object;
+  query?: Array<String | string>;
   deleteMany?: boolean;
 };
