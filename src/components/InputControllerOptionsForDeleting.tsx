@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { IoTrashBin } from "react-icons/io5";
 import { generateController } from "@/lib/controllers/generateController";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function InputControllerOptionsForDeleting({
   setCode,
@@ -18,9 +25,9 @@ export default function InputControllerOptionsForDeleting({
 
   const handleInputChange = (id, value) => {
     const updatedInputs = inputs.map((input) =>
-      input.id === id ? { ...input, value } : input
+      input.id === id ? { ...input, value } : input,
     );
-    
+
     setInputs(updatedInputs);
 
     let hasError = false;
@@ -33,18 +40,21 @@ export default function InputControllerOptionsForDeleting({
         if (input.value.includes("=")) {
           setError("Please use ':' instead of '='.");
           hasError = true;
-          return;         }
+          return;
+        }
 
         if (!key || !val) {
           hasError = true;
-          return;         }
+          return;
+        }
 
         newQueries.push(`${key}: ${val.replace(/"/g, "").trim()}`);
       }
     });
 
     if (!hasError) {
-      setError("");       setDeleteOperationOptions((prev) => ({
+      setError("");
+      setDeleteOperationOptions((prev) => ({
         ...prev,
         query: newQueries,
       }));
@@ -65,9 +75,9 @@ export default function InputControllerOptionsForDeleting({
       query: deleteOperationOptions.query,
       typeOfCode,
     };
-    
+
     console.log(deleteOptions);
-    
+
     const code = generateController("delete", deleteOptions, typeOfCode);
     console.log(code);
     setCode(code);
@@ -76,10 +86,10 @@ export default function InputControllerOptionsForDeleting({
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-col gap-4 rounded-md p-5">
-        <div className="flex flex-col gap-4 rounded-md border-2 border-red-300/20 p-5">
+        <div className="flex flex-col gap-4 rounded-sm border border-red-500/70 p-5">
           <div className="text-3xl">Enter Delete Query</div>
           <hr className="border border-white/30" />
-          <div className="text-md text-yellow-400">
+          <div className="text-md text-yellow-400/95">
             ! Leave blank if you want to delete everything
           </div>
 
@@ -96,7 +106,7 @@ export default function InputControllerOptionsForDeleting({
               />
               <button
                 onClick={() => removeInput(input.id)}
-                className="rounded-sm bg-red-600 p-2 text-white"
+                className="rounded-sm bg-red-500 p-2 text-white"
                 aria-label="Remove parameter"
               >
                 <IoTrashBin className="h-5 w-5" />
@@ -106,23 +116,27 @@ export default function InputControllerOptionsForDeleting({
 
           <button
             onClick={addInput}
-            className="flex w-fit items-center rounded-lg border border-white/30 bg-black p-2 text-white hover:bg-red-300 hover:text-black"
+            className="flex w-fit items-center rounded-lg border border-white/30 bg-black p-2 text-white hover:bg-white hover:text-black"
             aria-label="Add parameter"
           >
             Add Parameter
           </button>
         </div>
-
-        <div className="flex items-center gap-3">
-          <div className="text-3xl">Type of code</div>
-          <select
-            value={typeOfCode}
-            onChange={(e) => setTypeOfCode(e.target.value)}
-            className="normal-input w-fit"
-          >
-            <option value="route">Route</option>
-            <option value="function">Controller</option>
-          </select>
+        <div className="flex gap-3">
+          <div className="text-3xl">Type of Code</div>
+          <Select>
+            <SelectTrigger
+              className="text-md w-fit space-x-1"
+              value={typeOfCode}
+              onChange={(e) => setTypeOfCode(e.target.value)}
+            >
+              <SelectValue placeholder="Select Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="route">Route</SelectItem>
+              <SelectItem value="functions">Controller</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <button className="button" onClick={handleSubmit}>

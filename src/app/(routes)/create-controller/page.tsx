@@ -137,7 +137,7 @@ export default function CreateController() {
               />
 
               {code && (
-                <div className="rounded-md border border-white bg-black text-white">
+                <div className="rounded-md border border-white/10 bg-slate-900 p-5 text-white">
                   <pre className="code">{code}</pre>
                 </div>
               )}

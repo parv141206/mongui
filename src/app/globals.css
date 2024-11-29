@@ -4,10 +4,10 @@
 @tailwind utilities;
 
 .normal-input {
-  @apply rounded-md border border-white/25 bg-black p-3;
+  @apply appearance-none rounded-md border border-white/30 bg-black bg-[length:12px] bg-right bg-no-repeat px-3 py-2;
 }
-select {
-  @apply rounded-md border border-white/25 bg-black p-3;
+.normal-input-light {
+  @apply appearance-none rounded-md border border-gray-500 bg-white bg-[length:12px] bg-right bg-no-repeat px-3 py-2;
 }
 @font-face {
   font-family: "Aptos";
@@ -47,6 +47,8 @@ body {
   display: flex;
   align-items: center;
   cursor: pointer;
+  font-size: 24px;
+  border: black;
 }
 
 .custom-checkbox input {
@@ -54,9 +56,9 @@ body {
 }
 
 .checkmark {
-  width: 20px; /* Width of the custom checkbox */
-  height: 20px; /* Height of the custom checkbox */
-  background-color: black; /* Background color */
+  width: 10px; /* Width of the custom checkbox */
+  height: 10px; /* Height of the custom checkbox */
+  background-color: rgba(0, 0, 0, 0.87); /* Background color */
   border-radius: 5px; /* Rounded corners */
   padding: 0.75rem; /* Equivalent to p-3 for padding */
   position: relative;
@@ -65,7 +67,7 @@ body {
 }
 
 .custom-checkbox input:checked + .checkmark {
-  background-color: #4caf50; /* Change background when checked */
+  background-color: rgba(0, 0, 0, 0.913); /* Change background when checked */
 }
 
 .checkmark::after {
@@ -191,7 +193,10 @@ html {
   @apply border-b border-white/50 bg-black p-3 text-2xl focus:border-b focus:outline-none;
 }
 .button {
-  @apply w-fit rounded-sm border border-white/30 bg-black px-2 py-1 text-2xl text-white hover:bg-white hover:text-black;
+  @apply w-fit rounded-sm border border-white/30 bg-black px-2 py-1 text-lg text-white transition duration-300 ease-in-out hover:bg-white hover:text-black;
+}
+.button-light {
+  @apply flex w-fit items-center rounded-md border border-gray-500 bg-white p-2 text-black transition duration-300 ease-in-out hover:bg-black hover:text-white;
 }
 
 .checkbox {
