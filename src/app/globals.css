@@ -7,7 +7,7 @@
   @apply appearance-none rounded-md border border-white/30 bg-black bg-[length:12px] bg-right bg-no-repeat px-3 py-2;
 }
 .normal-input-light {
-  @apply appearance-none rounded-md border border-gray-500 bg-white bg-[length:12px] bg-right bg-no-repeat px-3 py-2;
+  @apply appearance-none rounded-md border border-gray-500 bg-white bg-[length:12px] bg-right bg-no-repeat px-3 py-2 text-black;
 }
 @font-face {
   font-family: "Aptos";
@@ -59,7 +59,7 @@ body {
   width: 10px; /* Width of the custom checkbox */
   height: 10px; /* Height of the custom checkbox */
   background-color: rgba(0, 0, 0, 0.87); /* Background color */
-  border-radius: 5px; /* Rounded corners */
+  border-radius: 3px; /* Rounded corners */
   padding: 0.75rem; /* Equivalent to p-3 for padding */
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0.227);

@@ -24,7 +24,7 @@ export default function InputControllerOptionsForInserting({
       modelName: modelName,
       insertMany: insertMultiple,
     };
-    const code = generateController("insert", insertOptions, typeOfCode);
+    const code = generateController("insert", insertOptions, "function");
     console.log(code);
     setCode(code);
   };
@@ -47,13 +47,13 @@ export default function InputControllerOptionsForInserting({
             <SelectTrigger
               className="text-md w-fit space-x-1"
               value={typeOfCode}
-              onChange={(e) => setTypeOfCode(e.target.value)}
+              onChange={(e) => setTypeOfCode("route")}
             >
               <SelectValue placeholder="Select Type" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="route">Route</SelectItem>
-              <SelectItem value="functions">Controller</SelectItem>
+              <SelectItem value="function">Controller</SelectItem>
             </SelectContent>
           </Select>
         </div>

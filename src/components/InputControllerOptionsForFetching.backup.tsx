@@ -318,7 +318,7 @@ export default function InputControllerOptionsForFetching({
           </SelectTrigger>
           <SelectContent className="border border-gray-500">
             <SelectItem value="route">Route</SelectItem>
-            <SelectItem value="functions">Controller</SelectItem>
+            <SelectItem value="controller">Controller</SelectItem>
           </SelectContent>
         </Select>
       </div>
