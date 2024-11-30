@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { isValidKeyValueFormat } from "@/lib/utils";
 
 export default function InputControllerOptionsForDeleting({
   setCode,
@@ -23,7 +24,7 @@ export default function InputControllerOptionsForDeleting({
   });
   const [error, setError] = useState("");
 
-  const handleInputChange = (id, value) => {
+  const handleInputChange = (id: number, value: string) => {
     const updatedInputs = inputs.map((input) =>
       input.id === id ? { ...input, value } : input,
     );
@@ -37,8 +38,8 @@ export default function InputControllerOptionsForDeleting({
       if (input.value) {
         const [key, val] = input.value.split(":").map((item) => item.trim());
 
-        if (input.value.includes("=")) {
-          setError("Please use ':' instead of '='.");
+        if (!isValidKeyValueFormat([input.value])) {
+          setError(`Please use this format 👉 name: "cool"`);
           hasError = true;
           return;
         }
@@ -65,7 +66,7 @@ export default function InputControllerOptionsForDeleting({
     setInputs([...inputs, { id: Date.now(), value: "" }]);
   };
 
-  const removeInput = (id) => {
+  const removeInput = (id: number) => {
     setInputs(inputs.filter((input) => input.id !== id));
   };
 
@@ -93,7 +94,7 @@ export default function InputControllerOptionsForDeleting({
             ! Leave blank if you want to delete everything
           </div>
 
-          {error && <div className="text-red-500">{error}</div>}
+          {error && <div className="text-red-200">{error}</div>}
 
           {inputs.map((input) => (
             <div key={input.id} className="flex items-center gap-3">
@@ -137,6 +138,19 @@ export default function InputControllerOptionsForDeleting({
               <SelectItem value="functions">Controller</SelectItem>
             </SelectContent>
           </Select>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="text-3xl">Type of code</div>
+          <select
+            value={typeOfCode}
+            onChange={(e) =>
+              setTypeOfCode(e.target.value as "route" | "function")
+            }
+            className="normal-input w-fit"
+          >
+            <option value="route">Route</option>
+            <option value="function">Controller</option>
+          </select>
         </div>
 
         <button className="button" onClick={handleSubmit}>

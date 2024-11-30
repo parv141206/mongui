@@ -9,13 +9,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { isValidKeyValueFormat } from "@/lib/utils";
 
 export default function InputControllerOptionsForFetching({
   setCode,
   modelName,
 }: {
   setCode: (code: string) => void;
-  modelName: String;
+  modelName: string;
 }) {
   const [inputs, setInputs] = useState([{ id: Date.now(), value: "" }]);
   const [sortInputs, setSortInputs] = useState([
@@ -30,48 +31,60 @@ export default function InputControllerOptionsForFetching({
     limit: 100,
   });
   const [typeOfCode, setTypeOfCode] = useState<"route" | "function">("route");
+  const [error, setError] = useState("");
 
-  const handleInputChange = (id, value) => {
-    setInputs(
-      inputs.map((input) => (input.id === id ? { ...input, value } : input)),
+  const handleInputChange = (id: number, value: string) => {
+    const updatedInputs = inputs.map((input) =>
+      input.id === id ? { ...input, value } : input,
     );
 
-    const newQuery = {};
-    inputs.forEach((input) => {
+    setInputs(updatedInputs);
+
+    let newQuery: Record<string, any> = {};
+    let hasError = false;
+
+    updatedInputs.forEach((input) => {
       if (input.value) {
+        // Validate the input format
+        if (!isValidKeyValueFormat([input.value])) {
+          setError(`Please use this format 👉 name = "cool"`);
+          hasError = true;
+          return;
+        }
+
         const [key, val] = input.value.split("=").map((item) => item.trim());
         if (key) {
           let numericValue;
-
           if (typeof val === "string" && val.trim() !== "") {
             const parsedValue = parseFloat(val);
-            if (!isNaN(parsedValue)) {
-              numericValue = parsedValue;
-            } else {
-              numericValue = val.replace(/"/g, "");
-            }
+            numericValue = !isNaN(parsedValue)
+              ? parsedValue
+              : val.replace(/"/g, "");
           }
-
           if (numericValue !== undefined) {
             newQuery[key] = numericValue;
           }
         }
       }
     });
-    setFetchOperationOptions((prev) => ({
-      ...prev,
-      query: newQuery,
-    }));
+
+    if (!hasError) {
+      setError("");
+      setFetchOperationOptions((prev) => ({
+        ...prev,
+        query: newQuery,
+      }));
+    }
   };
 
-  const handleSortChange = (id, field, direction) => {
+  const handleSortChange = (id: number, field: string, direction: string) => {
     setSortInputs(
       sortInputs.map((sortInput) =>
         sortInput.id === id ? { ...sortInput, field, direction } : sortInput,
       ),
     );
 
-    const newSort = {};
+    const newSort: Record<string, number> = {};
     sortInputs.forEach((sortInput) => {
       if (sortInput.field) {
         newSort[sortInput.field] = sortInput.direction === "asc" ? 1 : -1;
@@ -88,7 +101,7 @@ export default function InputControllerOptionsForFetching({
     setInputs([...inputs, { id: Date.now(), value: "" }]);
   };
 
-  const removeInput = (id) => {
+  const removeInput = (id: number) => {
     setInputs(inputs.filter((input) => input.id !== id));
   };
 
@@ -99,19 +112,20 @@ export default function InputControllerOptionsForFetching({
     ]);
   };
 
-  const removeSortInput = (id) => {
+  const removeSortInput = (id: number) => {
     setSortInputs(sortInputs.filter((sortInput) => sortInput.id !== id));
   };
 
   const handleSubmit = () => {
     const fetchOptions = {
-      modelName: modelName,
+      modelName,
       findAll: fetchOperationOptions.findAll,
       query: fetchOperationOptions.query,
       findOne: fetchOperationOptions.findOne,
       sort: fetchOperationOptions.sort,
       limit: fetchOperationOptions.limit,
     };
+
     const code = generateController("fetch", fetchOptions, typeOfCode);
     console.log(code);
     setCode(code);
@@ -125,6 +139,9 @@ export default function InputControllerOptionsForFetching({
         <div className="text-md font-medium text-red-500">
           ! Leave blank if you want to fetch everything
         </div>
+
+        {/* Error Message */}
+        {error && <div className="text-red-500">{error}</div>}
 
         {/* Query Inputs */}
         {inputs.map((input) => (
@@ -155,15 +172,13 @@ export default function InputControllerOptionsForFetching({
         </button>
       </div>
       <div className="flex flex-col gap-3 rounded-md border-2 border-black bg-white p-5 text-black">
+        {/* Sort Options */}
         <Checkbox
           label="Enable Sort"
-          onChange={(checked) => {
-            setSortState(checked);
-          }}
+          onChange={(checked) => setSortState(checked)}
           checked={sortState}
         />
 
-        {/* Sort Inputs */}
         {sortState && (
           <>
             <hr className="border border-black" />
@@ -171,6 +186,7 @@ export default function InputControllerOptionsForFetching({
               Edit Sorting Options
             </div>
 
+            <div className="text-2xl">Edit Sorting Options</div>
             {sortInputs.map((sortInput) => (
               <div key={sortInput.id} className="flex items-center gap-2">
                 <input
@@ -210,11 +226,10 @@ export default function InputControllerOptionsForFetching({
                   className="bg-transaprent rounded-sm p-1 text-white"
                   aria-label="Remove sorting parameter"
                 >
-                  <IoTrashBin className="h-5 w-5 text-black" />
+                  <IoTrashBin className="h-5 w-5 text-yellow-600" />
                 </button>
               </div>
             ))}
-
             <button
               onClick={addSortInput}
               className="button-light"
@@ -225,9 +240,9 @@ export default function InputControllerOptionsForFetching({
           </>
         )}
       </div>
-      {/* Additional Options */}
-      <div className="flex flex-col gap-3 rounded-md border-2 border-white/30 bg-white p-5 text-black">
-        <div className="text-3xl">Additional Options</div>
+      {/* Fetch Options */}
+      <div className="flex flex-col gap-3 rounded-md bg-white p-5 text-black">
+        <div className="text-3xl text-black">Additional Options</div>
         <hr className="border border-black" />
 
         <Checkbox

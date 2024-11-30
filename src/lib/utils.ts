@@ -75,3 +75,15 @@ export function getRouteFunction(
     })
     `;
 }
+
+export function isValidKeyValueFormat(arr: string[]): boolean {
+  const regex = /^\s*[^:]+:\s*[^:]+$/;
+
+  for (const str of arr) {
+    if (!regex.test(str)) {
+      return false;
+    }
+  }
+
+  return true;
+}
