@@ -38,6 +38,9 @@ body {
   font-family: "Anton";
   font-size: 8rem;
 }
+.huge-code-text-without-size {
+  font-family: "Anton";
+}
 .huge-text {
   font-family: "Peach";
   font-size: 10rem;
