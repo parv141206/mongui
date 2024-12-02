@@ -11,6 +11,7 @@ import { generateController } from "@/lib/controllers/generateController";
 import { isValidKeyValueFormat } from "@/lib/utils";
 import Link from "next/link";
 import { useState } from "react";
+import { FaExclamation } from "react-icons/fa";
 import { IoTrashBin } from "react-icons/io5";
 
 export default function CreateController() {
@@ -26,15 +27,19 @@ export default function CreateController() {
   >("");
   const [code, setCode] = useState("");
   const [query, setQuery] = useState({ query: {} });
-  const handleTypeChange = (value) => {
-    setTypeOfCode(value);
-    generateExampleCode();
-  };
-  const handleOperationChange = (value) => {
-    setOperation(value);
 
-    generateExampleCode();
+  const handleTypeChange = (value: "route" | "function") => {
+    setTypeOfCode(value);
+    generateExampleCode({ typeOfCode: value });
   };
+
+  const handleOperationChange = (
+    value: "fetch" | "create" | "update" | "delete",
+  ) => {
+    setOperation(value);
+    generateExampleCode({ operation: value });
+  };
+
   const handleInputChange = (id: number, value: string) => {
     const updatedInputs = inputs.map((input) =>
       input.id === id ? { ...input, value } : input,
@@ -47,95 +52,106 @@ export default function CreateController() {
 
     updatedInputs.forEach((input) => {
       if (input.value) {
-        // Validate the input format
         console.log(input.value);
         if (!isValidKeyValueFormat([input.value])) {
+          console.log(isValidKeyValueFormat([input.value]));
           hasError = true;
           return;
         }
-
-        const [key, val] = input.value.split("=").map((item) => item.trim());
+        console.log(input.value.split(":").map((item) => item.trim()));
+        const [key, val] = input.value.split(":").map((item) => item.trim());
         if (key) {
-          let numericValue;
-          if (typeof val === "string" && val.trim() !== "") {
-            const parsedValue = parseFloat(val);
-            numericValue = !isNaN(parsedValue)
-              ? parsedValue
+          let numericValue =
+            val && !isNaN(parseFloat(val))
+              ? parseFloat(val)
               : val.replace(/"/g, "");
-          }
-          if (numericValue !== undefined) {
-            newQuery[key] = numericValue;
-          }
+          newQuery[key] = numericValue;
         }
       }
     });
-    console.log(hasError);
+
     if (!hasError) {
-      setQuery((prev) => ({
-        ...prev,
-        query: newQuery,
-      }));
-      generateExampleCode();
+      console.log({ query: newQuery });
+      setQuery({ query: newQuery });
+
+      generateExampleCode({ query: newQuery });
     }
   };
+
   const addInput = () => {
-    setInputs([...inputs, { id: Date.now(), value: "" }]);
-  };
-  const removeInput = (id: number) => {
-    setInputs(inputs.filter((input) => input.id !== id));
+    const newInputs = [...inputs, { id: Date.now(), value: "" }];
+    setInputs(newInputs);
+    generateExampleCode({ inputs: newInputs });
   };
 
-  const generateExampleCode = () => {
-    if (!modelName) return "Please provide a model name.";
-    console.log({
-      modelName,
-      findAll: findAll,
-      query: query.query,
-      findOne: findOne,
-      sort: {},
-    });
+  const removeInput = (id: number) => {
+    const filteredInputs = inputs.filter((input) => input.id !== id);
+    setInputs(filteredInputs);
+    generateExampleCode({ inputs: filteredInputs });
+  };
+
+  const generateExampleCode = (
+    overrides: Partial<{
+      modelName: string;
+      typeOfCode: "route" | "function";
+      operation: "fetch" | "create" | "update" | "delete";
+      inputs: typeof inputs;
+      query: (typeof query)["query"];
+      findOne: boolean;
+    }> = {},
+  ) => {
+    const finalModelName = overrides.modelName ?? modelName;
+    const finalTypeOfCode = overrides.typeOfCode ?? typeOfCode;
+    const finalOperation = overrides.operation ?? operation;
+    const finalInputs = overrides.inputs ?? inputs;
+    const finalQuery = overrides.query ?? query.query;
+    const finalFindOne = overrides.findOne ?? findOne;
+
+    if (!finalModelName) return "Please provide a model name.";
+
     setCode(
       generateController(
-        "fetch",
+        finalOperation || "fetch",
         {
-          modelName,
-          findAll: findAll,
-          query: query.query,
-          findOne: findOne,
+          modelName: finalModelName,
+          query: finalQuery,
+          findOne: finalFindOne,
           sort: {},
         },
-        typeOfCode,
+        finalTypeOfCode,
       ),
     );
   };
 
   return (
     <div className="bg-black px-6 py-6">
-      {/* Static Title */}
-      <div className="huge-code-text-without-size text-8xl text-white">
+      <div className="huge-code-text-without-size text-8xl text-white/80">
         Create <span className="text-green-500">Controllers</span>
       </div>
       <hr className="mb-3 mt-3 border border-white/50" />
 
-      {/* Two-column Layout */}
-      <div className="flex-row-4 flex rounded-lg text-white">
-        {/* Left Column - Input Section */}
+      <div className="flex-row-4 flex rounded-lg text-white/80">
         <div className="w-full p-3">
-          <div className="text-4xl">Enter name of your model</div>
+          <div className="text-3xl">Enter name of your model</div>
           <input
             onChange={(e) => {
-              generateExampleCode();
-              setModelName(e.target.value);
+              const newName = e.target.value;
+              setModelName(newName);
+              generateExampleCode({ modelName: newName });
             }}
             type="text"
             className="controller-input"
             placeholder="Model Name"
           />
-
-          <div className="mt-2 text-3xl">Type of Operation</div>
           {modelName === "" && (
-            <p className="warning text-lg">! Name of model is required</p>
+            <p className="warning flex items-center gap-1 text-lg">
+              <FaExclamation />
+              Name of model is required
+            </p>
           )}
+          <div className="mt-2 flex items-center gap-3 text-3xl text-white/80">
+            Type of Operation{" "}
+          </div>
           <Select onValueChange={handleOperationChange} disabled={!modelName}>
             <SelectTrigger className="mt-2 w-fit space-x-1 border-white/30 text-2xl">
               <SelectValue placeholder={"Select Type"} />
@@ -147,62 +163,58 @@ export default function CreateController() {
             </SelectContent>
           </Select>
 
-          <>
-            {operation === "fetch" && (
-              <>
-                <div className="mt-3 w-fit gap-3 rounded-br-md rounded-tr-md border-l-2 border-lime-400 bg-white/5 p-5 text-white">
-                  <div className="text-3xl">Additional Options</div>
-                  <hr className="mb-3 mt-3 border border-white/30" />
-                  <div className="warning">
-                    ! Leave blank if you don't want to add any additional
-                    options
-                  </div>
-                  {inputs.map((input) => (
-                    <div key={input.id} className="flex items-center gap-3">
-                      <input
-                        type="text"
-                        placeholder={`name = "cool"`}
-                        className="normal-input mt-2"
-                        value={input.value}
-                        onChange={(e) =>
-                          handleInputChange(input.id, e.target.value)
-                        }
-                      />
-                      <button
-                        onClick={() => removeInput(input.id)}
-                        className="bg-trasparent rounded-sm p-1 text-white"
-                        aria-label="Remove parameter"
-                      >
-                        <IoTrashBin className="h-5 w-5 text-red-500" />
-                      </button>
-                    </div>
-                  ))}
+          {operation === "fetch" && (
+            <div className="mt-3 w-fit gap-3 rounded-br-2xl rounded-tr-2xl border-l-2 border-green-400 bg-white/5 p-5 text-white/80">
+              <div className="text-3xl">Additional Options</div>
+              <hr className="mb-3 mt-3 border border-white/30" />
+              <div className="warning">
+                ! Leave blank if you want to enable the FindAll option
+              </div>
+              {inputs.map((input) => (
+                <div key={input.id} className="flex items-center gap-3">
+                  <input
+                    type="text"
+                    placeholder={`name : "cool"`}
+                    className="normal-input mt-2"
+                    value={input.value}
+                    onChange={(e) =>
+                      handleInputChange(input.id, e.target.value)
+                    }
+                  />
                   <button
-                    onClick={addInput}
-                    className="button mt-2"
-                    aria-label="Add parameter"
+                    onClick={() => removeInput(input.id)}
+                    className="bg-trasparent rounded-sm p-1 text-white"
+                    aria-label="Remove parameter"
                   >
-                    Add Parameter
+                    <IoTrashBin className="h-5 w-5 text-red-500" />
                   </button>
-                  <div className="mt-5">
-                    <label className="mt-2 flex items-center">
-                      <Checkbox
-                        label="Find One"
-                        checked={findOne}
-                        onChange={() => setFindOne(!findOne)}
-                      />
-                    </label>
-                  </div>
                 </div>
-              </>
-            )}
-          </>
-          <div className="mt-3 text-3xl">Type of Output</div>
-          {modelName === "" && (
-            <p className="warning mb-2 mt-1 text-lg">
-              ! Name of model is required
-            </p>
+              ))}
+              <button
+                onClick={addInput}
+                className="button mt-2"
+                aria-label="Add parameter"
+              >
+                Add Parameter
+              </button>
+              <div className="mt-5">
+                <label className="mt-2 flex items-center">
+                  <Checkbox
+                    label="Find One"
+                    checked={findOne} // Directly tied to state
+                    onChange={() => {
+                      const newValue = !findOne; // Compute the new state value
+                      setFindOne(newValue); // Update state
+                      // Pass the new value explicitly to ensure correct behavior
+                      generateExampleCode({ findOne: newValue });
+                    }}
+                  />
+                </label>
+              </div>
+            </div>
           )}
+
+          <div className="mt-3 text-3xl text-white/80">Type of Output</div>
           <Select onValueChange={handleTypeChange} disabled={!modelName}>
             <SelectTrigger className="mt-2 w-fit space-x-1 border-white/30 text-2xl">
               <SelectValue placeholder={"Select Type"} />
@@ -218,14 +230,13 @@ export default function CreateController() {
           </Link>
         </div>
 
-        {/* Right Column - Code Section */}
-        <div className="mt-3 h-fit w-full rounded-lg border border-white/30 bg-black p-4">
-          <div className="mb-4 flex items-center justify-between">
+        <div className="mt-3 h-fit w-full rounded-xl border border-white/30 bg-black p-4">
+          <div className="flex items-center justify-between">
             <div className="text-3xl">No need to type now 😎</div>
             <button
               className={`button ${copy ? "text-white" : "text-gray-200"}`}
               onClick={() => {
-                navigator.clipboard.writeText(generateExampleCode());
+                navigator.clipboard.writeText(code);
                 setCopy(true);
                 setTimeout(() => setCopy(false), 2000);
               }}
@@ -235,7 +246,13 @@ export default function CreateController() {
           </div>
           <hr className="mb-3 mt-3 border border-white/30" />
           <pre>
-            <code>{code}</code>
+            <textarea
+              value={code}
+              rows={20}
+              spellCheck={false}
+              onChange={(e) => setCode(e.target.value)}
+              className="mt-2 h-full w-full rounded-lg bg-black py-3 text-lg text-white/70"
+            ></textarea>
           </pre>
         </div>
       </div>
