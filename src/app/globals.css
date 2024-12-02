@@ -191,8 +191,12 @@ html {
     transform: scale(0.8);
   }
 }
+
+.warning {
+  @apply text-sm text-cyan-500;
+}
 .controller-input {
-  @apply mb-3 mt-2 h-12 w-2/4 appearance-none rounded-md border border-lime-400/30 bg-white bg-opacity-5 bg-[length:20px] bg-right bg-no-repeat px-3 py-2 text-2xl;
+  @apply mb-3 mt-2 h-12 w-2/4 appearance-none rounded-md border border-lime-400 bg-white bg-opacity-5 bg-[length:20px] bg-right bg-no-repeat px-3 py-2 text-2xl;
 }
 .button {
   @apply w-fit rounded-sm border border-white/30 bg-black px-2 py-1 text-lg text-white transition duration-300 ease-in-out hover:bg-white hover:text-black;

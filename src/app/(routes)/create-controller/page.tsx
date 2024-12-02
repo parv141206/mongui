@@ -23,7 +23,7 @@ export default function CreateController() {
   const [copy, setCopy] = useState(false);
   const [operation, setOperation] = useState<
     "fetch" | "create" | "update" | "delete"
-  >("fetch");
+  >("");
   const [code, setCode] = useState("");
   const [query, setQuery] = useState({ query: {} });
   const handleTypeChange = (value) => {
@@ -132,11 +132,9 @@ export default function CreateController() {
             placeholder="Model Name"
           />
 
-          <div className="mt-3 text-3xl">Type of Operation</div>
+          <div className="mt-2 text-3xl">Type of Operation</div>
           {modelName === "" && (
-            <p className="text-lg text-yellow-600">
-              ! Name of model is required
-            </p>
+            <p className="warning text-lg">! Name of model is required</p>
           )}
           <Select onValueChange={handleOperationChange} disabled={!modelName}>
             <SelectTrigger className="mt-2 w-fit space-x-1 border-white/30 text-2xl">
@@ -152,10 +150,10 @@ export default function CreateController() {
           <>
             {operation === "fetch" && (
               <>
-                <div className="mt-3 w-fit gap-3 rounded-br-md rounded-tr-md border-l-2 border-lime-400/30 bg-white/5 p-5 text-white">
+                <div className="mt-3 w-fit gap-3 rounded-br-md rounded-tr-md border-l-2 border-lime-400 bg-white/5 p-5 text-white">
                   <div className="text-3xl">Additional Options</div>
                   <hr className="mb-3 mt-3 border border-white/30" />
-                  <div className="text-md font-medium text-yellow-600">
+                  <div className="warning">
                     ! Leave blank if you don't want to add any additional
                     options
                   </div>
@@ -201,7 +199,7 @@ export default function CreateController() {
           </>
           <div className="mt-3 text-3xl">Type of Output</div>
           {modelName === "" && (
-            <p className="mb-2 mt-1 text-lg text-yellow-600">
+            <p className="warning mb-2 mt-1 text-lg">
               ! Name of model is required
             </p>
           )}
