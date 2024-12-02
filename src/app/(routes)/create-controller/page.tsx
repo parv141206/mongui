@@ -15,12 +15,11 @@ import { IoTrashBin } from "react-icons/io5";
 
 export default function CreateController() {
   const [modelName, setModelName] = useState("");
-
   const [inputs, setInputs] = useState([{ id: Date.now(), value: "" }]);
   const [typeOfCode, setTypeOfCode] = useState<"route" | "function">("route");
-  const [findAll, setFindAll] = useState(true); // Set findAll checkbox checked by default
-  const [findOne, setFindOne] = useState(false); // State for findOne checkbox
-  const [limit, setLimit] = useState(""); // State for limit input
+  const [findAll, setFindAll] = useState(true);
+  const [findOne, setFindOne] = useState(false);
+  const [limit, setLimit] = useState("");
   const [copy, setCopy] = useState(false);
   const [operation, setOperation] = useState<
     "fetch" | "create" | "update" | "delete"
@@ -28,11 +27,7 @@ export default function CreateController() {
   const [code, setCode] = useState("");
   const [query, setQuery] = useState({ query: {} });
   const handleTypeChange = (value) => {
-    setTypeOfCode(value); // Update state with selected type
-    // Reset checkboxes and limit when type changes
-    //setFindAll(true); // Keep findAll checked by default
-    //setFindOne(false);
-    //setLimit("");
+    setTypeOfCode(value);
     generateExampleCode();
   };
   const handleOperationChange = (value) => {
@@ -115,17 +110,17 @@ export default function CreateController() {
   };
 
   return (
-    <div className="bg-black px-8 py-8">
+    <div className="bg-black px-6 py-6">
       {/* Static Title */}
-      <div className="huge-code-text-without-size mb-5 text-7xl text-white">
+      <div className="huge-code-text-without-size text-8xl text-white">
         Create <span className="text-green-500">Controllers</span>
       </div>
-      <hr className="mb-6 border border-white/50" />
+      <hr className="mb-3 mt-3 border border-white/50" />
 
       {/* Two-column Layout */}
       <div className="flex-row-4 flex rounded-lg text-white">
         {/* Left Column - Input Section */}
-        <div className="w-full p-5">
+        <div className="w-full p-3">
           <div className="text-4xl">Enter name of your model</div>
           <input
             onChange={(e) => {
@@ -137,14 +132,14 @@ export default function CreateController() {
             placeholder="Model Name"
           />
 
-          <div className="text-3xl">Type of Operation</div>
+          <div className="mt-3 text-3xl">Type of Operation</div>
           {modelName === "" && (
-            <p className="py-2 text-lg text-yellow-600">
+            <p className="text-lg text-yellow-600">
               ! Name of model is required
             </p>
           )}
           <Select onValueChange={handleOperationChange} disabled={!modelName}>
-            <SelectTrigger className="w-fit space-x-1 border-white/30 text-2xl">
+            <SelectTrigger className="mt-2 w-fit space-x-1 border-white/30 text-2xl">
               <SelectValue placeholder={"Select Type"} />
             </SelectTrigger>
             <SelectContent>
@@ -155,20 +150,21 @@ export default function CreateController() {
           </Select>
 
           <>
-            <div className="mt-3 w-fit gap-3 border-s border-green-400 bg-stone-950 p-5 text-white">
-              <div className="text-3xl">Additional Options</div>
-              <hr className="mb-3 mt-3 border border-white/30" />
-              <div className="text-md font-medium text-yellow-600">
-                ! Leave blank if you don't want to add any additional options
-              </div>
-              {operation === "fetch" && (
-                <>
+            {operation === "fetch" && (
+              <>
+                <div className="mt-3 w-fit gap-3 rounded-br-md rounded-tr-md border-l-2 border-lime-400/30 bg-white/5 p-5 text-white">
+                  <div className="text-3xl">Additional Options</div>
+                  <hr className="mb-3 mt-3 border border-white/30" />
+                  <div className="text-md font-medium text-yellow-600">
+                    ! Leave blank if you don't want to add any additional
+                    options
+                  </div>
                   {inputs.map((input) => (
                     <div key={input.id} className="flex items-center gap-3">
                       <input
                         type="text"
                         placeholder={`name = "cool"`}
-                        className="normal-input-light"
+                        className="normal-input mt-2"
                         value={input.value}
                         onChange={(e) =>
                           handleInputChange(input.id, e.target.value)
@@ -185,7 +181,7 @@ export default function CreateController() {
                   ))}
                   <button
                     onClick={addInput}
-                    className="button-light"
+                    className="button mt-2"
                     aria-label="Add parameter"
                   >
                     Add Parameter
@@ -199,22 +195,18 @@ export default function CreateController() {
                       />
                     </label>
                   </div>
-                </>
-              )}
-            </div>
+                </div>
+              </>
+            )}
           </>
-          <div className="text-3xl">Type of Output</div>
+          <div className="mt-3 text-3xl">Type of Output</div>
           {modelName === "" && (
-            <p className="py-2 text-lg text-yellow-600">
+            <p className="mb-2 mt-1 text-lg text-yellow-600">
               ! Name of model is required
             </p>
           )}
-          <Select
-            defaultValue="route"
-            onValueChange={handleTypeChange}
-            disabled={!modelName}
-          >
-            <SelectTrigger className="w-fit space-x-1 border-white/30 text-2xl">
+          <Select onValueChange={handleTypeChange} disabled={!modelName}>
+            <SelectTrigger className="mt-2 w-fit space-x-1 border-white/30 text-2xl">
               <SelectValue placeholder={"Select Type"} />
             </SelectTrigger>
             <SelectContent>
@@ -229,11 +221,11 @@ export default function CreateController() {
         </div>
 
         {/* Right Column - Code Section */}
-        <div className="w-full rounded-lg border border-white/30 bg-black p-5">
+        <div className="mt-3 h-fit w-full rounded-lg border border-white/30 bg-black p-4">
           <div className="mb-4 flex items-center justify-between">
-            <div className="text-3xl font-medium">No need to type now 😎</div>
+            <div className="text-3xl">No need to type now 😎</div>
             <button
-              className={`rounded px-4 py-2 ${copy ? "text-white" : "text-gray-200"}`}
+              className={`button ${copy ? "text-white" : "text-gray-200"}`}
               onClick={() => {
                 navigator.clipboard.writeText(generateExampleCode());
                 setCopy(true);

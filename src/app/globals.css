@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 .normal-input {
-  @apply appearance-none rounded-md border border-white/30 bg-black bg-[length:12px] bg-right bg-no-repeat px-3 py-2;
+  @apply appearance-none rounded-sm border border-white/30 bg-black bg-[length:12px] bg-right bg-no-repeat px-3 py-2;
 }
 .normal-input-light {
   @apply appearance-none rounded-md border border-gray-500 bg-white bg-[length:12px] bg-right bg-no-repeat px-3 py-2 text-black;
@@ -167,7 +167,7 @@ html {
 }
 /* width */
 ::-webkit-scrollbar {
-  width: 7px;
+  width: 5px;
 }
 
 /* Track */
@@ -177,13 +177,13 @@ html {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: darkgray;
+  background: black;
   border-radius: 2px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: gray;
+  background: darkgray;
 }
 
 @media screen and (min-zoom: 1.25) {
