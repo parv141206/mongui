@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useRef, memo } from "react";
 import { gsap } from "gsap";
-//import { cn } from "@/lib/utils";
-//import AnimatedGridPattern from "@/components/ui/animated-grid-pattern";
+import { cn } from "@/lib/utils";
+import AnimatedGridPattern from "@/components/ui/animated-grid-pattern";
 import Particles from "@/components/ui/particles";
 import Safari from "@/components/ui/safari";
 import SimpleCodeView from "@/components/SimpleCodeView";
@@ -147,7 +147,7 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="mt-32 hidden w-full items-center justify-center md:flex">
+        <div className="mt-44 hidden w-full items-center justify-center md:flex">
           <div className="container flex flex-col justify-between gap-5 md:flex-row">
             <div className="showcase flex translate-x-[-900px] scale-75 justify-start opacity-0 md:w-1/3">
               <CodeShowcase />
@@ -248,8 +248,7 @@ export default function Home() {
         </footer>
       </div>
       <div className="absolute inset-0 z-0 h-screen">
-        <Particles />
-        {/*  <AnimatedGridPattern
+        <AnimatedGridPattern
           numSquares={30}
           maxOpacity={0.1}
           duration={3}
@@ -258,7 +257,7 @@ export default function Home() {
             "[mask-image:radial-gradient(500px_circle_at_center,green,transparent)]",
             "inset-x-0 inset-y-[-50%] h-[200%] skew-y-0",
           )}
-        /> */}
+        />
       </div>
     </div>
   );

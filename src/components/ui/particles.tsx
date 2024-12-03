@@ -188,11 +188,9 @@ const Particles: React.FC<ParticlesProps> = ({
       }
     });
 
-    // Continue animation
     window.requestAnimationFrame(animate);
   }, [ease, staticity, vx, vy, circleParams]);
 
-  // Draw circle utility function
   const drawCircle = useCallback((
     ctx: CanvasRenderingContext2D, 
     circle: any, 
@@ -213,7 +211,6 @@ const Particles: React.FC<ParticlesProps> = ({
     }
   }, [rgbColor]);
 
-  // Effect for canvas initialization and animation
   useEffect(() => {
     initCanvas();
     const animationFrame = animate();
@@ -228,9 +225,7 @@ const Particles: React.FC<ParticlesProps> = ({
     };
   }, [initCanvas, animate]);
 
-  // Mouse move effect
 
-  // Refresh effect
   useEffect(() => {
     initCanvas();
   }, [refresh, initCanvas]);
