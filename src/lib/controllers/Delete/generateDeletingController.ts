@@ -30,9 +30,8 @@ export function generateDeletingController(
       `_$_`,
       `
         try {
-            const { ${modelNameWithoutS.toLowerCase()} } = req.body;
 
-            const deleted${modelNameWithoutS} = await ${model.modelName}.findOneAndDelete(${model.query ?model.query.map(query => `{ ${query} }`).join(", "): `{ id: ${modelNameWithoutS.toLowerCase()} }`});
+            const deleted${modelNameWithoutS} = await ${model.modelName}.findOneAndDelete(${model.query ? JSON.stringify(model.query) : `{ id: ${modelNameWithoutS.toLowerCase()} }`});
 
             res.status(200).json({
                 success: true,
@@ -58,9 +57,8 @@ export function generateDeletingController(
       `_$_`,
       `
         try {
-            const { ${modelNameWithoutS.toLowerCase()} } = req.body;
 
-            const deleted${modelNameWithoutS} = await ${model.modelName}.findOneAndDelete(${model.query ?  model.query.map((query) => `{ ${query} }`).join(", ") : ` id: {${modelNameWithoutS.toLowerCase()}} `});
+            const deleted${modelNameWithoutS} = await ${model.modelName}.findOneAndDelete(${model.query ? model.query.map((query) => `{ ${query} }`).join(", ") : ` id: {${modelNameWithoutS.toLowerCase()}} `});
 
             return deleted${modelNameWithoutS};
         } catch (error) {
@@ -91,7 +89,6 @@ function getOuterFunction(model: DeleteController) {
     functionName = `deleteMultiple${toPascalCase(model.modelName)}`;
   } else {
     if (model.query) {
-
       functionName = `delete ${modelNameWithoutS}`;
     } else {
       functionName = `delete ${modelNameWithS}`;

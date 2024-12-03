@@ -18,13 +18,13 @@ export default function CreateController() {
   const [modelName, setModelName] = useState("");
   const [inputs, setInputs] = useState([{ id: Date.now(), value: "" }]);
   const [typeOfCode, setTypeOfCode] = useState<"route" | "function">("route");
-  const [findAll, setFindAll] = useState(true);
+  //const [findAll, setFindAll] = useState(true);
   const [findOne, setFindOne] = useState(false);
-  const [limit, setLimit] = useState("");
+  //const [limit, setLimit] = useState("");
   const [copy, setCopy] = useState(false);
-  const [operation, setOperation] = useState<
-    "fetch" | "create" | "update" | "delete"
-  >("");
+  const [operation, setOperation] = useState<"fetch" | "insert" | "delete">(
+    "fetch",
+  );
   const [code, setCode] = useState("");
   const [query, setQuery] = useState({ query: {} });
 
@@ -33,9 +33,7 @@ export default function CreateController() {
     generateExampleCode({ typeOfCode: value });
   };
 
-  const handleOperationChange = (
-    value: "fetch" | "create" | "update" | "delete",
-  ) => {
+  const handleOperationChange = (value: "fetch" | "insert" | "delete") => {
     setOperation(value);
     generateExampleCode({ operation: value });
   };
@@ -94,7 +92,7 @@ export default function CreateController() {
     overrides: Partial<{
       modelName: string;
       typeOfCode: "route" | "function";
-      operation: "fetch" | "create" | "update" | "delete";
+      operation: "fetch" | "insert" | "delete";
       inputs: typeof inputs;
       query: (typeof query)["query"];
       findOne: boolean;
@@ -103,7 +101,7 @@ export default function CreateController() {
     const finalModelName = overrides.modelName ?? modelName;
     const finalTypeOfCode = overrides.typeOfCode ?? typeOfCode;
     const finalOperation = overrides.operation ?? operation;
-    const finalInputs = overrides.inputs ?? inputs;
+    //const finalInputs = overrides.inputs ?? inputs;
     const finalQuery = overrides.query ?? query.query;
     const finalFindOne = overrides.findOne ?? findOne;
 
@@ -111,7 +109,7 @@ export default function CreateController() {
 
     setCode(
       generateController(
-        finalOperation || "fetch",
+        finalOperation,
         {
           modelName: finalModelName,
           query: finalQuery,
@@ -162,58 +160,97 @@ export default function CreateController() {
               <SelectItem value="delete">Delete</SelectItem>
             </SelectContent>
           </Select>
-
-          {operation === "fetch" && (
-            <div className="mt-3 w-fit gap-3 rounded-br-2xl rounded-tr-2xl border-l-2 border-green-400 bg-white/5 p-5 text-white/80">
-              <div className="text-3xl">Additional Options</div>
-              <hr className="mb-3 mt-3 border border-white/30" />
-              <div className="warning">
-                ! Leave blank if you want to enable the FindAll option
-              </div>
-              {inputs.map((input) => (
-                <div key={input.id} className="flex items-center gap-3">
-                  <input
-                    type="text"
-                    placeholder={`name : "cool"`}
-                    className="normal-input mt-2"
-                    value={input.value}
-                    onChange={(e) =>
-                      handleInputChange(input.id, e.target.value)
-                    }
-                  />
-                  <button
-                    onClick={() => removeInput(input.id)}
-                    className="bg-trasparent rounded-sm p-1 text-white"
-                    aria-label="Remove parameter"
-                  >
-                    <IoTrashBin className="h-5 w-5 text-red-500" />
-                  </button>
+          <div className="my-3 border-s border-green-400/25 p-5">
+            {operation === "fetch" && (
+              <div className="w-fit gap-3 rounded-br-2xl rounded-tr-2xl p-5 text-white/80">
+                <div className="text-3xl">Additional Options</div>
+                <hr className="mb-3 mt-3 border border-white/30" />
+                <div className="warning">
+                  ! Leave blank if you want to enable the FindAll option
                 </div>
-              ))}
-              <button
-                onClick={addInput}
-                className="button mt-2"
-                aria-label="Add parameter"
-              >
-                Add Parameter
-              </button>
-              <div className="mt-5">
-                <label className="mt-2 flex items-center">
-                  <Checkbox
-                    label="Find One"
-                    checked={findOne} // Directly tied to state
-                    onChange={() => {
-                      const newValue = !findOne; // Compute the new state value
-                      setFindOne(newValue); // Update state
-                      // Pass the new value explicitly to ensure correct behavior
-                      generateExampleCode({ findOne: newValue });
-                    }}
-                  />
-                </label>
-              </div>
-            </div>
-          )}
 
+                <div className="text-xl">Queries</div>
+                {inputs.map((input) => (
+                  <div key={input.id} className="flex items-center gap-3">
+                    <input
+                      type="text"
+                      placeholder={`name : "cool"`}
+                      className="normal-input mt-2"
+                      value={input.value}
+                      onChange={(e) =>
+                        handleInputChange(input.id, e.target.value)
+                      }
+                    />
+                    <button
+                      onClick={() => removeInput(input.id)}
+                      className="bg-trasparent rounded-sm p-1 text-white"
+                      aria-label="Remove parameter"
+                    >
+                      <IoTrashBin className="h-5 w-5 text-red-500" />
+                    </button>
+                  </div>
+                ))}
+                <button
+                  onClick={addInput}
+                  className="button mt-2"
+                  aria-label="Add parameter"
+                >
+                  Add Parameter
+                </button>
+                <div className="mt-5">
+                  <label className="mt-2 flex items-center">
+                    <Checkbox
+                      label="Find One"
+                      checked={findOne}
+                      onChange={() => {
+                        const newValue = !findOne;
+                        setFindOne(newValue);
+                        generateExampleCode({ findOne: newValue });
+                      }}
+                    />
+                  </label>
+                </div>
+              </div>
+            )}
+            {operation === "delete" && (
+              <>
+                <div className="text-3xl">Additional Options</div>
+                <hr className="mb-3 mt-3 border border-white/30" />
+
+                <div className="text-xl">Queries</div>
+                <div className="warning">
+                  ! Leave blank if you want to enable the FindAll option
+                </div>
+                {inputs.map((input) => (
+                  <div key={input.id} className="flex items-center gap-3">
+                    <input
+                      type="text"
+                      placeholder={`name : "cool"`}
+                      className="normal-input mt-2"
+                      value={input.value}
+                      onChange={(e) =>
+                        handleInputChange(input.id, e.target.value)
+                      }
+                    />
+                    <button
+                      onClick={() => removeInput(input.id)}
+                      className="bg-trasparent rounded-sm p-1 text-white"
+                      aria-label="Remove parameter"
+                    >
+                      <IoTrashBin className="h-5 w-5 text-red-500" />
+                    </button>
+                  </div>
+                ))}
+                <button
+                  onClick={addInput}
+                  className="button mt-2"
+                  aria-label="Add parameter"
+                >
+                  Add Parameter
+                </button>
+              </>
+            )}
+          </div>
           <div className="mt-3 text-3xl text-white/80">Type of Output</div>
           <Select onValueChange={handleTypeChange} disabled={!modelName}>
             <SelectTrigger className="mt-2 w-fit space-x-1 border-white/30 text-2xl">
