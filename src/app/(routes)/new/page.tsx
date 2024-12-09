@@ -16,7 +16,7 @@ import { DraggableEvent, DraggableData } from "react-draggable";
 import { useModal } from "@/hooks/useModal";
 import { IoMdHome } from "react-icons/io";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { Checkbox } from "@/components/Checkbox";
 
 export default function New() {
   const [models, setModels] = useState<Model[]>([]);
@@ -40,7 +40,6 @@ export default function New() {
       setInverseScale(1 / newScale);
     }
   };
-  const router = useRouter();
 
   // PANEEEEE
   const handleDrag = (event: MouseEvent) => {
@@ -604,6 +603,7 @@ function ModelCard({
   return (
     <div className="m-3 flex w-fit flex-col gap-3 rounded-xl border border-white/25 bg-black p-3">
       <input
+        className="normal-input"
         type="text"
         value={model.collection_name}
         onChange={(e) => updateModelName(e.target.value)}
@@ -695,6 +695,7 @@ function FieldCard({
     <div className="flex flex-col gap-3 border-s border-green-400 p-3">
       <div className="flex gap-3">
         <input
+          className="normal-input"
           type="text"
           value={field.name}
           placeholder="Field Name"
@@ -819,31 +820,6 @@ function ReferenceSelector({
           </option>
         ))}
       </select> */}
-    </>
-  );
-}
-
-function Checkbox({
-  label,
-  checked,
-  onChange,
-}: {
-  label: string;
-  checked?: boolean;
-  onChange: (checked: boolean) => void;
-}) {
-  return (
-    <>
-      <label className="custom-checkbox">
-        {label}
-        <input
-          className="checkbox"
-          type="checkbox"
-          checked={checked}
-          onChange={(e) => onChange(e.target.checked)}
-        />
-        <span className="checkmark"></span>
-      </label>
     </>
   );
 }

@@ -10,6 +10,7 @@ export function generateFetchingController(
   model: FetchController,
   type: "route" | "function",
 ) {
+  // @ts-ignore
   model.modelName = toPascalCase(model.modelName);
   let controller = "";
   if (type === "route") {

@@ -4,7 +4,7 @@ import {
   toCamelCase,
   toPascalCase,
 } from "@/lib/utils";
-import { FetchController, InsertController } from "../ControllerOperations";
+import { InsertController } from "../ControllerOperations";
 
 export function generateInsertingController(
   model: InsertController,

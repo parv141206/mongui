@@ -1,8 +1,13 @@
 "use client";
-
-import { useEffect, useId, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
 import { motion } from "framer-motion";
-
 import { cn } from "@/lib/utils";
 
 interface GridPatternProps {
@@ -32,70 +37,75 @@ export function GridPattern({
   ...props
 }: GridPatternProps) {
   const id = useId();
-  const containerRef = useRef(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const [squares, setSquares] = useState(() => generateSquares(numSquares));
+  const containerRef = useRef<HTMLElement | null>(null);
 
-  function getPos() {
+  // Memoized state for dimensions to prevent unnecessary re-renders
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  // Memoized position generator to avoid recreation on every render
+  const getPos = useCallback(() => {
     return [
       Math.floor((Math.random() * dimensions.width) / width),
       Math.floor((Math.random() * dimensions.height) / height),
     ];
-  }
+  }, [dimensions, width, height]);
 
-  // Adjust the generateSquares function to return objects with an id, x, and y
-  function generateSquares(count: number) {
-    return Array.from({ length: count }, (_, i) => ({
-      id: i,
-      pos: getPos(),
-    }));
-  }
+  // Optimized square generation with memoization
+  const initialSquares = useMemo(
+    () =>
+      Array.from({ length: numSquares }, (_, i) => ({
+        id: i,
+        pos: getPos(),
+      })),
+    [numSquares, getPos],
+  );
 
-  // Function to update a single square's position
-  const updateSquarePosition = (id: number) => {
-    setSquares((currentSquares) =>
-      currentSquares.map((sq) =>
-        sq.id === id
-          ? {
-              ...sq,
-              pos: getPos(),
-            }
-          : sq,
-      ),
-    );
-  };
+  const [squares, setSquares] = useState(initialSquares);
 
-  // Update squares to animate in
+  // Memoized square position update function
+  const updateSquarePosition = useCallback(
+    (id: number) => {
+      setSquares((currentSquares) =>
+        currentSquares.map((sq) =>
+          sq.id === id ? { ...sq, pos: getPos() } : sq,
+        ),
+      );
+    },
+    [getPos],
+  );
+
+  // Optimized resize observer effect
   useEffect(() => {
-    if (dimensions.width && dimensions.height) {
-      setSquares(generateSquares(numSquares));
-    }
-  }, [dimensions, numSquares]);
-
-  // Resize observer to update container dimensions
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
-        setDimensions({
-          width: entry.contentRect.width,
-          height: entry.contentRect.height,
-        });
-      }
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      setDimensions({
+        width: entry.contentRect.width,
+        height: entry.contentRect.height,
+      });
     });
 
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
+    const currentRef = containerRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (containerRef.current) {
-        resizeObserver.unobserve(containerRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
-  }, [containerRef]);
+  }, []);
+
+  // Regenerate squares when dimensions change
+  useEffect(() => {
+    if (dimensions.width && dimensions.height) {
+      setSquares(initialSquares);
+    }
+  }, [dimensions, initialSquares]);
 
   return (
     <svg
+      // @ts-ignore
       ref={containerRef}
       aria-hidden="true"
       className={cn(
@@ -124,6 +134,7 @@ export function GridPattern({
       <svg x={x} y={y} className="overflow-visible">
         {squares.map(({ pos: [x, y], id }, index) => (
           <motion.rect
+            key={`${id}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: maxOpacity }}
             transition={{
@@ -133,7 +144,6 @@ export function GridPattern({
               repeatType: "reverse",
             }}
             onAnimationComplete={() => updateSquarePosition(id)}
-            key={`${x}-${y}-${index}`}
             width={width - 1}
             height={height - 1}
             x={x * width + 1}
