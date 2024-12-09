@@ -1,5 +1,12 @@
 "use client";
-import React, { useEffect, useId, useRef, useState, useMemo, useCallback } from "react";
+import React, {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -31,7 +38,7 @@ export function GridPattern({
 }: GridPatternProps) {
   const id = useId();
   const containerRef = useRef<HTMLElement | null>(null);
-  
+
   // Memoized state for dimensions to prevent unnecessary re-renders
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
@@ -44,24 +51,28 @@ export function GridPattern({
   }, [dimensions, width, height]);
 
   // Optimized square generation with memoization
-  const initialSquares = useMemo(() => 
-    Array.from({ length: numSquares }, (_, i) => ({
-      id: i,
-      pos: getPos(),
-    })), 
-    [numSquares, getPos]
+  const initialSquares = useMemo(
+    () =>
+      Array.from({ length: numSquares }, (_, i) => ({
+        id: i,
+        pos: getPos(),
+      })),
+    [numSquares, getPos],
   );
 
   const [squares, setSquares] = useState(initialSquares);
 
   // Memoized square position update function
-  const updateSquarePosition = useCallback((id: number) => {
-    setSquares(currentSquares => 
-      currentSquares.map(sq => 
-        sq.id === id ? { ...sq, pos: getPos() } : sq
-      )
-    );
-  }, [getPos]);
+  const updateSquarePosition = useCallback(
+    (id: number) => {
+      setSquares((currentSquares) =>
+        currentSquares.map((sq) =>
+          sq.id === id ? { ...sq, pos: getPos() } : sq,
+        ),
+      );
+    },
+    [getPos],
+  );
 
   // Optimized resize observer effect
   useEffect(() => {
@@ -94,6 +105,7 @@ export function GridPattern({
 
   return (
     <svg
+      // @ts-ignore
       ref={containerRef}
       aria-hidden="true"
       className={cn(
