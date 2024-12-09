@@ -113,7 +113,7 @@ export default function Home() {
         <section
           style={{ perspective: "1000px" }}
           ref={containerRef}
-          className="safari-container relative flex h-[100vh] w-full flex-col items-center justify-center md:flex-row"
+          className="safari-container relative my-16 flex h-[100vh] w-full flex-col items-center justify-center md:flex-row"
         >
           <section
             ref={textRef}
@@ -228,6 +228,16 @@ export default function Home() {
             </Link>
           </div>
         </section>
+        <div className="m-3 flex flex-col items-center justify-center gap-3 rounded-xl bg-transparent p-3 text-center text-xl text-white backdrop-blur-md">
+          <div> Supporting Controllers too! (BETA)</div>
+          <Link
+            href="/create-controller"
+            className="button translate-y-3 rounded-xl bg-white px-6 py-2 text-black opacity-0 transition hover:bg-gray-200"
+          >
+            Try it now
+          </Link>
+        </div>
+
         <footer className="mt-10 flex justify-between text-xs font-light text-gray-500">
           <div>
             &copy; {new Date().getFullYear()} MongUi. All rights reserved.
