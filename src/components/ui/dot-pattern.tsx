@@ -14,8 +14,8 @@ interface DotPatternProps {
 }
 
 export function DotPattern({
-  width = 16,
-  height = 16,
+  width = 10,
+  height = 10,
   x = 0,
   y = 0,
   cx = width / 2, // Center circle horizontally
@@ -34,7 +34,7 @@ export function DotPattern({
     <svg
       aria-hidden="true"
       className={cn(
-        "pointer-events-none absolute inset-0 h-full w-full fill-neutral-400/80",
+        "pointer-events-none absolute inset-0 h-full w-full fill-white/25",
         className,
       )}
       {...props}
@@ -53,10 +53,8 @@ export function DotPattern({
           {Array.from({ length: numCirclesX * numCirclesY }).map((_, index) => {
             const circleX = (index % numCirclesX) * width + cx; // Calculate X position
             const circleY = Math.floor(index / numCirclesX) * height + cy; // Calculate Y position
-            
-            return (
-              <circle key={index} cx={circleX} cy={circleY} r={cr} />
-            );
+
+            return <circle key={index} cx={circleX} cy={circleY} r={cr} />;
           })}
         </pattern>
       </defs>
