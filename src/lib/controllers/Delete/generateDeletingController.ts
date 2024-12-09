@@ -58,7 +58,7 @@ export function generateDeletingController(
       `
         try {
 
-            const deleted${modelNameWithoutS} = await ${model.modelName}.findOneAndDelete(${model.query ? model.query.map((query) => `{ ${query} }`).join(", ") : ` id: {${modelNameWithoutS.toLowerCase()}} `});
+            const deleted${modelNameWithoutS} = await ${model.modelName}.findOneAndDelete(${model.query ? JSON.stringify(model.query) : `{ id: ${modelNameWithoutS.toLowerCase()} }`});
 
             return deleted${modelNameWithoutS};
         } catch (error) {
