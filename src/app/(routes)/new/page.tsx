@@ -703,6 +703,7 @@ function FieldCard({
         />
         <select
           value={field.type}
+          className="bg-black text-white"
           onChange={(e) =>
             updateField({ type: e.target.value as Field["type"] })
           }
