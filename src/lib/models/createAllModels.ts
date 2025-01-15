@@ -11,7 +11,7 @@ ${moduleType === "esm" ? "import { Schema } from 'mongoose';" : "const { Schema 
 `,
   );
   models.forEach((model) => {
-    AllModels.push("\n\n");
+    AllModels.push("\n");
     AllModels.push(createModel(model, moduleType));
   });
   return AllModels;

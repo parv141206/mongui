@@ -7,7 +7,6 @@ import "prismjs/themes/prism-tomorrow.css";
 import "dracula-prism/dist/css/dracula-prism.css";
 import Draggable from "react-draggable";
 import DotPattern from "@/components/ui/dot-pattern";
-import { IoTrashBin } from "react-icons/io5";
 import { IoIosAdd } from "react-icons/io";
 import { useConfirm } from "@/hooks/useConfirm";
 import DefaultView from "@/components/DefaultView";
@@ -17,6 +16,14 @@ import { useModal } from "@/hooks/useModal";
 import { IoMdHome } from "react-icons/io";
 import Link from "next/link";
 import { Checkbox } from "@/components/Checkbox";
+import {
+  Select,
+  SelectItem,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { BsController } from "react-icons/bs";
 
 export default function New() {
   const [models, setModels] = useState<Model[]>([]);
@@ -136,15 +143,25 @@ export default function New() {
         <div className="m-5 flex flex-col justify-between rounded-xl border border-white/15 bg-black/15 p-3 backdrop-blur-lg md:w-[80%]">
           <div className="flex justify-between">
             <div className="flex items-center justify-center gap-1">
-              <Link href={"/"} className="flex text-xl">
+              <Link
+                href={"/"}
+                className="flex bg-black pl-3 text-2xl text-white"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <IoMdHome />
               </Link>
-              <Link href={"/about"} className="mx-3 flex text-xl">
-                About
+              <p className="pl-2 text-2xl text-white">|</p>
+              <Link
+                href={"/create-controller"}
+                className="flex bg-black pl-3 text-2xl text-white"
+              >
+                <BsController />
               </Link>
+              <p className="text-sm text-emerald-500">Beta!</p>
             </div>
             <div className="flex gap-3">
-              <div className="flex items-center justify-start gap-1">
+              <div className="flex items-center justify-start gap-1 rounded-sm border-2 border-white/20 px-3 py-1 text-white transition-all duration-500 hover:bg-white hover:text-black">
                 <button
                   onClick={addModel}
                   className="flex items-center justify-center gap-1"
@@ -158,7 +175,7 @@ export default function New() {
                   setTranslateX(0);
                   setTranslateY(0);
                 }}
-                className="rounded-lg bg-white px-3 py-1 text-black"
+                className="rounded-sm border-2 border-white/20 bg-black px-3 py-1 text-white transition-all duration-500 hover:border-black hover:bg-white hover:text-black"
               >
                 Center Layout
               </button>
@@ -168,39 +185,43 @@ export default function New() {
                     setModels([]);
                   }
                 }}
-                className="rounded-lg bg-red-700 px-3 py-1 font-bold"
+                className="rounded-sm border-2 border-white/20 bg-black px-3 py-1 text-white transition-all duration-500 hover:border-black hover:bg-red-500 hover:text-black"
               >
                 Clear all
               </button>
             </div>
-            <div className="flex gap-3">
+            <div className="flex space-x-3 text-base">
               <button
+                className="text-yellow-400"
                 onClick={() => {
                   modal(`
-                   <div className="container flex flex-col gap-3 text-center md:w-[60%]">
-                    <div className="text-white/75">Click Add Model to get started.</div>
-                      <hr className="border-white/15" />
-                    <div>
-                    <div>Navigation:</div>
-                      <ul className="p-3 text-white/75">
-                        <li>Hold 'Alt' key and move mouse to pane around.</li>
-                        <li>'Ctrl' + Scroll to zoom.</li>
-                        <li>Simply drag a model to move it.</li>
-                      </ul>
-                    </div>
-                      <div className="text-green-400">
-                        Note: In order to reference a field in another model, use the 'ref' data
-                        type and mention the model name. This can be used to populate the field!
+                    <div class="max-w-md mx-auto flex flex-col gap-4 text-left px-4 py-1">
+                      <h2 class="futura text-3xl font-medium text-white/90">
+                        Getting Started!
+                      </h2>
+                      <hr class="border-white/15" />
+                      <div>
+                        <h3 class="futura text-2xl text-white/90 mb-2">
+                          Navigation
+                        </h3>
+                        <ul class="body space-y-1 text-base text-white/75">
+                          <li>• Hold Alt + mouse to pan around</li>
+                          <li>• Ctrl + scroll to zoom</li>
+                          <li>• Drag models to move them</li>
+                        </ul>
+                      </div>
+                      <div class="body text-emerald-400 bg-emerald-950/35 p-3 rounded">
+                        <strong>Tip:</strong> To reference another model's field, use the 'ref' data type and specify the model name.
                       </div>
                     </div>
-                    `);
+                  `);
                 }}
               >
-                Help!
+                Help
               </button>
               <button
                 onClick={handleCodeViewOpen}
-                className="rounded-lg bg-green-700 px-3 py-1 font-bold"
+                className="rounded-sm border-2 border-emerald-500 bg-emerald-500 px-3 py-1 text-black"
               >
                 Code
               </button>
@@ -213,13 +234,6 @@ export default function New() {
       </div>
       {models.length === 0 && (
         <div className="relative flex h-full w-full items-center justify-center gap-5 text-xl">
-          {/* <Image
-            src={"/assets/arrow.svg"}
-            width={100}
-            height={100}
-            alt="" 
-            className="left-0 top-0 rotate-[270deg] scale-[5] opacity-50"
-          /> */}
           <DefaultView />
         </div>
       )}
@@ -601,7 +615,7 @@ function ModelCard({
   }
 
   return (
-    <div className="m-3 flex w-fit flex-col gap-3 rounded-xl border border-white/25 bg-black p-3">
+    <div className="m-3 flex w-fit flex-col gap-3 rounded-md border border-white/30 bg-black p-3 backdrop-blur-lg">
       <input
         className="normal-input"
         type="text"
@@ -615,14 +629,14 @@ function ModelCard({
         models={models}
         setModels={setModels}
       />
-      <div className="flex w-full justify-between">
-        <div className="w-fit rounded-xl bg-white p-3 text-black">
-          <button className="flex items-center gap-2" onClick={addFieldToModel}>
+      <div className="flex w-full justify-between gap-3">
+        <div className="w-fit rounded-sm border border-white/30 bg-white px-3 py-1 text-black transition-all duration-500 hover:border hover:border-green-500 hover:bg-green-500">
+          <button className="flex items-center gap-1" onClick={addFieldToModel}>
             <IoIosAdd className="text-2xl font-bold" />
             Add Field
           </button>
         </div>
-        <div className="w-fit rounded-xl p-3">
+        <div className="w-fit rounded-sm border border-white/30 px-3 py-1 text-white transition-all duration-500 hover:border-red-500 hover:bg-red-500 hover:text-black">
           <button
             onClick={async () => {
               if (await confirm("Are you sure you want to delete this model?"))
@@ -701,30 +715,34 @@ function FieldCard({
           placeholder="Field Name"
           onChange={(e) => updateField({ name: e.target.value })}
         />
-        <select
+        <Select
           value={field.type}
-          className="bg-black text-white"
-          onChange={(e) =>
-            updateField({ type: e.target.value as Field["type"] })
+          onValueChange={(value) =>
+            updateField({ type: value as Field["type"] })
           }
         >
-          {[
-            "string",
-            "number",
-            "boolean",
-            "object",
-            "array",
-            "date",
-            "ref",
-          ].map((type) => (
-            <option key={type} value={type}>
-              {type}
-            </option>
-          ))}
-        </select>
+          <SelectTrigger className="h-full w-fit gap-3 rounded-sm border border-white/30 px-3 py-2 text-sm text-white">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {[
+              "string",
+              "number",
+              "boolean",
+              "object",
+              "array",
+              "date",
+              "ref",
+            ].map((type) => (
+              <SelectItem key={type} value={type}>
+                {type}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       {field.type === "ref" && (
-        <div className="flex items-center gap-3 px-3">
+        <div className="flex items-center gap-3 px-1">
           <div>Reference: </div>
           <ReferenceSelector
             field={field}
@@ -735,7 +753,7 @@ function FieldCard({
           />
         </div>
       )}
-      <div className="flex gap-3 p-3">
+      <div className="flex gap-3">
         <Checkbox
           label="Required"
           checked={field.required}
@@ -748,7 +766,7 @@ function FieldCard({
           onChange={(checked) => updateField({ unique: checked })}
         />
         <button
-          className="mx-3 text-3xl"
+          className="ml-2 rounded-sm border border-white/30 px-3 py-1 text-white transition-all duration-500 hover:border-red-500 hover:bg-red-500 hover:text-black"
           onClick={() =>
             setModels((prevModels) =>
               prevModels.map((model, i) =>
@@ -762,7 +780,7 @@ function FieldCard({
             )
           }
         >
-          <IoTrashBin />
+          Remove
         </button>
       </div>
     </div>
@@ -784,24 +802,32 @@ function ReferenceSelector({
 }) {
   return (
     <>
-      <select
+      <Select
         value={field.ref?.collection_name || ""}
-        onChange={(e) => {
+        onValueChange={(value) => {
           const selectedCollection = models.find(
-            (m) => m.collection_name === e.target.value,
+            (m) => m.collection_name === value,
           );
           updateField({
             ref: selectedCollection ? { ...selectedCollection } : null,
           });
         }}
       >
-        <option value="">none</option>
-        {models.map((model) => (
-          <option key={model.collection_name} value={model.collection_name}>
-            {model.collection_name}
-          </option>
-        ))}
-      </select>
+        <SelectTrigger className="w-fit gap-3 rounded-sm border border-white/30">
+          <SelectValue placeholder="Select a collection" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="None">none</SelectItem>
+          {models.map((model) => (
+            <SelectItem
+              key={model.collection_name}
+              value={model.collection_name}
+            >
+              {model.collection_name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
 
       {/* <select
         value={field.ref_field?.name || ""}

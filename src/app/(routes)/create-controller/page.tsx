@@ -199,7 +199,7 @@ export default function CreateController() {
                   Add Parameter
                 </button>
                 <div className="mt-3">
-                  <label className="flex items-center">
+                  <label className="flex items-center text-xl">
                     <Checkbox
                       label="Find One"
                       checked={findOne}
@@ -293,7 +293,7 @@ export default function CreateController() {
               rows={20}
               spellCheck={false}
               onChange={(e) => setCode(e.target.value)}
-              className="mt-2 h-full w-full rounded-lg bg-black text-lg text-white/70"
+              className="mt-2 h-full w-full rounded-lg bg-black text-lg text-white outline outline-1 outline-white/30"
             ></textarea>
           </pre>
         </div>

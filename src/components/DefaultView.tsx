@@ -2,20 +2,21 @@ import React from "react";
 
 export default function DefaultView() {
   return (
-    <div className="container flex flex-col gap-3 text-center md:w-[60%]">
+    <div className="container flex flex-col gap-2 text-center md:w-[60%]">
       <div>No models yet! Click 'Add Model' to get started.</div>
-      <hr className="border-white/15" />
+      <p>Create and Name all Models first!</p>
+      <hr className="border-white/30" />
       <div>
         <div>Navigation:</div>
         <ul className="p-3 text-white/75">
-          <li>Hold 'Alt' key and move mouse to pane around.</li>
-          <li>'Ctrl' + Scroll to zoom.</li>
-          <li>Simply drag a model to move it.</li>
+          <li>• Hold Alt + mouse to pan around</li>
+          <li>• Ctrl + scroll to zoom</li>
+          <li>• Drag models to move them</li>
         </ul>
       </div>
-      <div className="text-green-400">
-        Note: In order to reference a field in another model, use the 'ref' data
-        type and mention the model name. This can be used to populate the field!
+      <div className="body rounded bg-black p-3 text-emerald-400">
+        <strong>Tip:</strong> To reference another model's field, use the 'ref'
+        data type and specify the model name.
       </div>
     </div>
   );

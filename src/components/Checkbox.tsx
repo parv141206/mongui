@@ -1,3 +1,5 @@
+import { Checkbox as ShadcnCheckbox } from "@/components/ui/checkbox";
+
 export function Checkbox({
   label,
   checked,
@@ -8,17 +10,19 @@ export function Checkbox({
   onChange: (checked: boolean) => void;
 }) {
   return (
-    <>
-      <label className="custom-checkbox">
+    <div className="flex items-center space-x-2">
+      <ShadcnCheckbox
+        id={label}
+        checked={checked}
+        onCheckedChange={onChange}
+        className="h-5 w-5 border-2 border-white/20"
+      />
+      <label
+        htmlFor={label}
+        className="font-medium leading-none text-white peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+      >
         {label}
-        <input
-          className="checkbox normal-input"
-          type="checkbox"
-          checked={checked}
-          onChange={(e) => onChange(e.target.checked)}
-        />
-        <span className="checkmark"></span>
       </label>
-    </>
+    </div>
   );
 }

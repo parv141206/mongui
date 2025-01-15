@@ -3,7 +3,6 @@ import React, { useEffect, useRef, memo } from "react";
 import { gsap } from "gsap";
 import { cn } from "@/lib/utils";
 import AnimatedGridPattern from "@/components/ui/animated-grid-pattern";
-import Particles from "@/components/ui/particles";
 import Safari from "@/components/ui/safari";
 import SimpleCodeView from "@/components/SimpleCodeView";
 import "prismjs/themes/prism-tomorrow.css";
@@ -56,8 +55,7 @@ export default function Home() {
           duration: 1,
           y: 0,
           opacity: 1,
-          stagger: 0.3,
-          ease: "power2.out",
+          ease: "back.in",
         },
       );
 
@@ -98,7 +96,7 @@ export default function Home() {
           </h1>
           <p className="description mt-4 max-w-md text-center text-3xl leading-relaxed text-white opacity-0">
             Generate Mongoose Models effortlessly with{" "}
-            <span className="text-green-300">MongUi</span>.
+            <span className="text-green-600">MongUi</span>.
           </p>
           <Link href={"/new"}>
             <button className="button mt-6 translate-y-3 rounded-xl bg-white px-6 py-2 text-black opacity-0 transition hover:bg-gray-200">

@@ -52,12 +52,12 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
               className="text-white"
               dangerouslySetInnerHTML={{ __html: message }}
             ></p>
-            <div className="mt-4 flex justify-between">
+            <div className="mt-2 flex justify-between">
               <button
-                className="rounded bg-green-700 px-4 py-2 text-white"
+                className="mx-4 rounded-sm border-2 border-white/20 bg-black px-3 py-1 text-white transition-all duration-500 hover:border-black hover:bg-white hover:text-black"
                 onClick={handleConfirm}
               >
-                Yeah
+                Understood
               </button>
             </div>
           </div>
