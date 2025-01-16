@@ -6,12 +6,37 @@ export function createModel(model: Model, moduleType: "esm" | "cjs") {
 
   const fieldsString = model.fields
     .map((field) => {
-      return `${field.name}: {
-        type: ${field.type === "ref" ? "Schema.Types.ObjectId" : field.type},
-        ${field.required ? "required: true," : ""}
-        ${field.unique ? "unique: true," : ""}
-        ${field.type === "ref" ? `ref: '${field.ref?.collection_name}',` : ""}
-    }`;
+      const fieldDef = {
+        type:
+          field.type === "ref"
+            ? "Schema.Types.ObjectId"
+            : field.type === "string"
+              ? "String"
+              : field.type === "number"
+                ? "Number"
+                : field.type === "boolean"
+                  ? "Boolean"
+                  : field.type === "date"
+                    ? "Date"
+                    : field.type === "object"
+                      ? "Object"
+                      : field.type === "array"
+                        ? "Array"
+                        : field.type,
+        ...(field.required && { required: true }),
+        ...(field.unique && { unique: true }),
+        ...(field.type === "ref" &&
+          field.ref && { ref: field.ref.collection_name }),
+      };
+
+      const fieldProps = Object.entries(fieldDef)
+        .map(
+          ([key, value]) =>
+            `${key}: ${typeof value === "string" && key !== "type" ? `'${value}'` : value}`,
+        )
+        .join(",\n        ");
+
+      return `${field.name}: {\n        ${fieldProps}\n    }`;
     })
     .join(",\n    ");
 
@@ -33,41 +58,3 @@ const ${formattedCollectionName} = mongoose.model('${formattedCollectionName}', 
     throw new Error("Invalid module type. Use 'esm' or 'cjs'.");
   }
 }
-
-console.log(
-  createModel(
-    {
-      collection_name: "First",
-      fields: [
-        {
-          name: "Name",
-          type: "string",
-          ref: null,
-          ref_field: null,
-        },
-        {
-          name: "password",
-          type: "ref",
-          ref: {
-            collection_name: "Second",
-            fields: [
-              {
-                name: "password",
-                type: "string",
-                ref: null,
-                ref_field: null,
-              },
-            ],
-          },
-          ref_field: {
-            name: "password",
-            type: "string",
-            ref: null,
-            ref_field: null,
-          },
-        },
-      ],
-    },
-    "esm",
-  ),
-);

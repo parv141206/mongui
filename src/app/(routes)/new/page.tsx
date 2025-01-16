@@ -84,6 +84,34 @@ export default function New() {
     Prism.highlightAll();
   }, [models]);
 
+  const validateRefModels = () => {
+    // Check each model's fields for ref types
+    for (const model of models) {
+      for (const field of model.fields) {
+        if (field.type === "ref") {
+          // Check if the referenced model exists
+          const referencedModel = models.find(
+            (m) =>
+              m.collection_name.trim() === field.ref?.collection_name?.trim(),
+          );
+
+          if (!referencedModel) {
+            setError(
+              `Invalid Reference: Create and name all models before editing.`,
+            );
+            return false;
+          }
+        }
+      }
+    }
+    setError(null);
+    return true;
+  };
+
+  useEffect(() => {
+    validateRefModels();
+  }, [models]);
+
   const validateCollectionNames = () => {
     const collectionNames = new Set<string>();
     const duplicates = new Set<string>();
@@ -120,29 +148,24 @@ export default function New() {
       setIsCodeViewOpen(true);
     }
   };
+
   const confirm = useConfirm();
   const modal = useModal();
   return (
     <div
       ref={ref}
-      className="relative h-screen overflow-x-hidden overflow-y-hidden bg-[#17181f-temp] bg-black text-white"
+      className="relative h-screen overflow-x-hidden overflow-y-hidden bg-black text-white"
     >
       <div className="absolute inset-0 z-0">
-        <DotPattern
-          numSquares={30}
-          maxOpacity={0.1}
-          duration={3}
-          repeatDelay={1}
-          className="opacity-25"
-        />
+        <DotPattern className="bg-black fill-white opacity-25" />
       </div>
       {isCodeViewOpen && (
         <CodeView setIsCodeViewOpen={setIsCodeViewOpen} models={models} />
       )}
       <div className="absolute z-10 flex w-full items-center justify-center">
-        <div className="m-5 flex flex-col justify-between rounded-xl border border-white/15 bg-black/15 p-3 backdrop-blur-lg md:w-[80%]">
+        <div className="m-5 flex flex-col justify-between rounded-xl border border-white/15 bg-black p-3 backdrop-blur-lg md:w-[80%]">
           <div className="flex justify-between">
-            <div className="flex items-center justify-center gap-1">
+            <div className="flex items-center justify-center gap-4">
               <Link
                 href={"/"}
                 className="flex bg-black pl-3 text-2xl text-white"
@@ -151,14 +174,13 @@ export default function New() {
               >
                 <IoMdHome />
               </Link>
-              <p className="pl-2 text-2xl text-white">|</p>
+
               <Link
                 href={"/create-controller"}
-                className="flex bg-black pl-3 text-2xl text-white"
+                className="border-b border-emerald-500 bg-black text-base text-emerald-500"
               >
-                <BsController />
+                Controllers!
               </Link>
-              <p className="text-sm text-emerald-500">Beta!</p>
             </div>
             <div className="flex gap-3">
               <div className="flex items-center justify-start gap-1 rounded-sm border-2 border-white/20 px-3 py-1 text-white transition-all duration-500 hover:bg-white hover:text-black">
@@ -228,7 +250,9 @@ export default function New() {
             </div>
           </div>
           {error && (
-            <div className="mt-2 text-center text-red-500">{error}</div>
+            <div className="absolute left-1/2 top-[calc(100%+0.5rem)] flex -translate-x-1/2 items-center justify-center rounded bg-white p-3 text-center text-red-500">
+              {error}
+            </div>
           )}
         </div>
       </div>
@@ -615,7 +639,7 @@ function ModelCard({
   }
 
   return (
-    <div className="m-3 flex w-fit flex-col gap-3 rounded-md border border-white/30 bg-black p-3 backdrop-blur-lg">
+    <div className="m-3 flex w-fit flex-col gap-3 rounded-sm border-2 border-white/20 bg-black p-3 backdrop-blur-lg">
       <input
         className="normal-input"
         type="text"
@@ -706,10 +730,10 @@ function FieldCard({
   }
 
   return (
-    <div className="flex flex-col gap-3 border-s border-green-400 p-3">
-      <div className="flex gap-3">
+    <div className="flex flex-col gap-3 border-s-2 border-green-500 p-3">
+      <div className="flex flex-row items-center justify-center gap-3">
         <input
-          className="normal-input"
+          className="field-input"
           type="text"
           value={field.name}
           placeholder="Field Name"
@@ -721,21 +745,21 @@ function FieldCard({
             updateField({ type: value as Field["type"] })
           }
         >
-          <SelectTrigger className="h-full w-fit gap-3 rounded-sm border border-white/30 px-3 py-2 text-sm text-white">
+          <SelectTrigger className="flex h-full w-fit items-center gap-1 rounded-sm border border-white/30 px-3 py-1 text-base text-white/80 hover:border-white/50">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="border-2 border-white/20 bg-black text-base text-white outline outline-1 focus:outline-black">
             {[
-              "string",
-              "number",
-              "boolean",
-              "object",
-              "array",
-              "date",
-              "ref",
-            ].map((type) => (
-              <SelectItem key={type} value={type}>
-                {type}
+              { value: "string", label: "String" },
+              { value: "number", label: "Number" },
+              { value: "boolean", label: "Boolean" },
+              { value: "object", label: "Object" },
+              { value: "array", label: "Array" },
+              { value: "date", label: "Date" },
+              { value: "ref", label: "Reference" },
+            ].map(({ value, label }) => (
+              <SelectItem key={value} value={value}>
+                {label}
               </SelectItem>
             ))}
           </SelectContent>
@@ -765,24 +789,24 @@ function FieldCard({
           checked={field.unique}
           onChange={(checked) => updateField({ unique: checked })}
         />
-        <button
-          className="ml-2 rounded-sm border border-white/30 px-3 py-1 text-white transition-all duration-500 hover:border-red-500 hover:bg-red-500 hover:text-black"
-          onClick={() =>
-            setModels((prevModels) =>
-              prevModels.map((model, i) =>
-                i === modelIndex
-                  ? {
-                      ...model,
-                      fields: model.fields.filter((_, fi) => fi !== fieldIndex),
-                    }
-                  : model,
-              ),
-            )
-          }
-        >
-          Remove
-        </button>
       </div>
+      <button
+        className="w-fit rounded-sm border border-white/30 px-3 py-1 text-white transition-all duration-500 hover:border-red-500 hover:bg-red-500 hover:text-black"
+        onClick={() =>
+          setModels((prevModels) =>
+            prevModels.map((model, i) =>
+              i === modelIndex
+                ? {
+                    ...model,
+                    fields: model.fields.filter((_, fi) => fi !== fieldIndex),
+                  }
+                : model,
+            ),
+          )
+        }
+      >
+        Remove
+      </button>
     </div>
   );
 }

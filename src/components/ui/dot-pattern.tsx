@@ -14,27 +14,27 @@ interface DotPatternProps {
 }
 
 export function DotPattern({
-  width = 10,
-  height = 10,
+  width = 16, // Increased default width
+  height = 16, // Increased default height
   x = 0,
   y = 0,
   cx = width / 2, // Center circle horizontally
   cy = height / 2, // Center circle vertically
-  cr = Math.min(width, height) / 4, // Default radius based on size
+  cr = Math.min(width, height) / 16, // Smaller radius relative to increased size
   className,
   ...props
 }: DotPatternProps) {
   const id = useId();
 
   // Calculate the number of circles based on width and height
-  const numCirclesX = Math.ceil(100 / width); // Adjust for desired density
-  const numCirclesY = Math.ceil(100 / height); // Adjust for desired density
+  const numCirclesX = Math.ceil(100 / width); // Fewer circles due to larger width
+  const numCirclesY = Math.ceil(100 / height); // Fewer circles due to larger height
 
   return (
     <svg
       aria-hidden="true"
       className={cn(
-        "pointer-events-none absolute inset-0 h-full w-full fill-white/30",
+        "pointer-events-none absolute inset-0 h-full w-full",
         className,
       )}
       {...props}

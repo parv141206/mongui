@@ -4,7 +4,11 @@
 @tailwind utilities;
 
 .normal-input {
-  @apply appearance-none rounded-sm border border-white/30 bg-black bg-[length:12px] bg-right bg-no-repeat px-3 py-2 text-white focus:outline-none;
+  @apply rounded-sm border border-white/30 bg-black bg-[length:12px] bg-right bg-no-repeat px-3 py-2 text-base text-white focus:outline-none;
+}
+
+.field-input {
+  @apply rounded-sm border border-white/30 bg-black bg-[length:12px] bg-right bg-no-repeat px-3 py-1 text-base text-white focus:outline-none;
 }
 .normal-input-light {
   @apply appearance-none rounded-md border border-gray-500 bg-white bg-[length:12px] bg-right bg-no-repeat px-3 py-2 text-black focus:outline-none;
@@ -31,6 +35,9 @@ iframe {
 body {
   font-family: "Aptos";
 }
+.body {
+  font-family: "Aptos";
+}
 .futura {
   font-family: "Futura", sans-serif;
 }
@@ -40,6 +47,7 @@ body {
 }
 .huge-code-text-without-size {
   font-family: "Anton";
+  letter-spacing: 0.05rem;
 }
 .huge-text {
   font-family: "Peach";

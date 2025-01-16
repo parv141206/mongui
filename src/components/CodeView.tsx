@@ -16,10 +16,10 @@ function CreateAllModelsOutput({ models }: { models: Model[] }) {
   }, [models]);
 
   return (
-    <div className="w-full">
+    <div className="w-full overflow-auto scroll-smooth">
       <pre className="rounded-lg bg-[#282a36] px-4 font-mono">
         <code className="language-typescript">
-          {createAllModels(models, "cjs").join("")}
+          {createAllModels(models, "cjs").join("\n")}
         </code>
       </pre>
     </div>
@@ -34,51 +34,50 @@ export default function CodeView({
   setIsCodeViewOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [copy, setCopy] = useState(false);
-  useEffect(() => {
-    // Highlight code when models change
-    // Prism.highlightAll();
-  }, [models]);
 
   return (
     <>
-      <div className="absolute top-0 z-20 flex h-screen w-screen items-center justify-center bg-[#282a3655] p-3 backdrop-blur-sm">
-        <div className="relative h-[80%] overflow-y-scroll scroll-smooth rounded-sm border border-white/20 bg-[#282a36]">
-          <div className="sticky top-0 flex justify-between bg-[#282a36]">
-            <h1 className="mt-2 p-3 text-4xl text-[#50fa7b]">
+      <div className="fixed inset-0 z-20 flex items-center justify-center bg-black/20 backdrop-blur-sm">
+        <div className="flex max-h-[90vh] w-fit min-w-[35vw] flex-col overflow-hidden rounded-sm border border-white/20 bg-[#282a36]">
+          <div className="mt-3 flex justify-between border-b border-white/20 bg-[#282a36] px-3 py-2">
+            <h1 className="futura text-4xl text-green-400">
               Here's your code!
             </h1>
-            <div className="flex items-center justify-center gap-3">
+            <div className="flex items-center justify-center">
               <button
-                className={`rounded border-2 border-[#6272a4] px-3 py-1 transition-all duration-300 hover:bg-[#6272a4] hover:text-[#f8f8f2] ${copy ? "text-[#f8f8f2]" : "text-[#6272a4]"}`}
-                onClick={() => {
-                  // @ts-ignore
-                  navigator.clipboard.writeText(createAllModels(models, "cjs"));
-                  setCopy(true);
-                  setTimeout(() => {
-                    setCopy(false);
-                  }, 2000);
-                }}
-              >
-                {copy ? "Copied!" : "Copy"}
-              </button>
-              <button
-                className="pr-3 text-xl font-bold text-[#ff5555] hover:text-[#ff79c6]"
+                className="p-3 text-xl font-bold text-red-500 hover:text-red-400"
                 onClick={() => setIsCodeViewOpen(false)}
               >
                 <IoMdClose />
               </button>
             </div>
           </div>
-          <hr className="mx-2 border border-[#6272a4]" />
-          <div className="h-auto overflow-y-scroll">
+
+          <div className="overflow-y-auto">
             <CreateAllModelsOutput models={models} />
           </div>
-          <div className="mt-4 flex justify-between px-4 pb-4">
+
+          <div className="flex justify-between border-t border-white/10 bg-gradient-to-t from-[#282a36]/80 to-transparent p-4 backdrop-blur-sm">
             <button
               className="rounded-sm border border-[#50fa7b] bg-[#50fa7b] px-3 py-2 text-[#282a36] transition-all duration-300 hover:bg-[#282a36] hover:text-[#50fa7b]"
               onClick={() => setIsCodeViewOpen(false)}
             >
               Looks good!
+            </button>
+            <button
+              className={`rounded border-2 border-[#6272a4] bg-[#6272a4] px-3 py-1 transition-all duration-500 hover:bg-transparent hover:text-white ${copy ? "text-black" : "text-black"}`}
+              onClick={() => {
+                navigator.clipboard.writeText(
+                  createAllModels(models, "cjs").join("\n"),
+                );
+                setCopy(true);
+                setTimeout(() => {
+                  setCopy(false);
+                }, 2000);
+                setIsCodeViewOpen(false);
+              }}
+            >
+              {copy ? "Copied!" : "Copy"}
             </button>
           </div>
         </div>
@@ -86,13 +85,3 @@ export default function CodeView({
     </>
   );
 }
-
-// function CreateAllModelsOutput({ models }: { models: Model[] }) {
-//   return (
-//     <div className="flex w-fit flex-col rounded-lg px-7">
-//       <pre className="draculaTheme">
-//         <code>{createAllModels(models, "cjs")}</code>
-//       </pre>
-//     </div>
-//   );
-// }

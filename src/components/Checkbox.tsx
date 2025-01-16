@@ -11,18 +11,15 @@ export function Checkbox({
 }) {
   return (
     <div className="flex items-center space-x-2">
+      <label htmlFor={label} className="pl-1 text-base text-white">
+        {label}
+      </label>
       <ShadcnCheckbox
         id={label}
         checked={checked}
         onCheckedChange={onChange}
-        className="h-5 w-5 border-2 border-white/20"
+        className="h-5 w-5 rounded-sm border border-white/30 data-[state=checked]:bg-white data-[state=checked]:text-black"
       />
-      <label
-        htmlFor={label}
-        className="font-medium leading-none text-white peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-      >
-        {label}
-      </label>
     </div>
   );
 }
