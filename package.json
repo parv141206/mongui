@@ -23,7 +23,7 @@
     "js-beautify": "^1.15.1",
     "konva": "^9.3.16",
     "lucide-react": "^0.453.0",
-    "next": "14.2.15",
+    "next": "14.2.35",
     "prismjs": "^1.29.0",
     "react": "^18",
     "react-dom": "^18",
