@@ -8,4 +8,4 @@ MongUI is a simple tool which helps you create mongoose models in JS without wri
 😄 Pretty neat init?
 
 ## This website is hosted at [MongUI](https://mongui.vercel.app/)
-### Made with love by [Parv Shah](https://github.com/parv141206) and [Rudra Mehta](https://github.com/rudyrog) 🐱‍🏍
+### Made with love by [Parv Shah](https://github.com/parv141206) and [Rudra Mehta](https://github.com/rudyrog) 🐱‍🏍  
